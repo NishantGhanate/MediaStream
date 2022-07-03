@@ -1,0 +1,8 @@
+*.pyc
+*.env
+*.log 
+
+# Ignore folders
+__pycache__
+venv/
+media/
