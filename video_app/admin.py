@@ -2,9 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 
-from .models import CustomUser
-from .forms import CustomUserCreationForm, CustomUserChangeForm
-
+from video_app.models import CustomUser, CategoryModel, VideoModel
+from video_app.forms import (
+    CustomUserCreationForm, CustomUserChangeForm, VideoForm
+)
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
@@ -28,4 +29,13 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('email',)
 
 
+class VideoAdmin(admin.ModelAdmin):
+    readonly_fields = (
+        'video_title_slug', 'video_file_m3u8', 
+        'video_error_msg', 'video_processing_status'
+    )
+    form = VideoForm
+
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(CategoryModel)
+admin.site.register(VideoModel, VideoAdmin)

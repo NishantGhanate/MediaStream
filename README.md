@@ -8,6 +8,7 @@ A django web application to stream video content using .m3u8
 - Python 3.10
 - Postgres Sql 14
 - Windows 11
+- WSL 2
 ```
 
 ### 2. Setup 
@@ -64,3 +65,67 @@ TIME_ZONE = Asia/Kolkata
 - python manage.py runserver 0.0.0.0:8000
 ```
 
+<hr>
+
+## Celery Setup 
+
+In order to use celery we need to setup two things first
+- Erlang
+- RabbitMQ on windows 
+
+
+### Rabbit MQ
+Using Chocolatey (ps on admin mode):
+> choco install rabbitmq
+
+OR 
+
+Install mannually 
+
+
+### 1. Erlang : https://www.erlang.org/downloads
+```
+- First install erlang & add to path 
+
+1 - Search edit environment variables for your account, 
+    go to advanced > Enviroment varibales
+
+2- Set environment variable:
+    Variable name : ERLANG_HOME
+    Variable value: C:\Program Files\Erlang
+
+Note: Don't include bin on above step.
+
+3- Append to the PATH environmental variable:
+    Variable name : PATH
+    Variable value: %ERLANG_HOME%\bin
+```
+
+### 2. RabbitMQ : https://www.rabbitmq.com/install-windows.html
+```
+> D:\Program Files\RabbitMQ Server\rabbitmq_server-3.10.5\sbin>
+> rabbitmqctl.bat status
+> rabbitmq-service.bat start | stop
+```
+Open : http://localhost:15672/mgmt
+```yml
+Username: guest
+Password: guest
+```
+
+### 3. Run Celery 
+```
+celery --app <project_name> worker -l info --pool=solo
+celery -A <project_name> worker -l INFO
+celery -A <project_name> worker -l info -Q celery, high
+
+celery --app media_stream worker -l info --pool=solo
+```
+
+Note : Make to sure to run migration if you have installed celery later
+
+## Redis Setup
+
+Requirements 
+- Redis on wsl 2
+- redisInsight-v2

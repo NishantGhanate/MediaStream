@@ -1,7 +1,10 @@
+import logging
 from django.views import View
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
+
+logger = logging.getLogger('video_app')
 
 class HomeView(View):
     template_name = 'base.html'
