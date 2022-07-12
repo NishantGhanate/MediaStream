@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_results',
     'video_app'
 ]
 
@@ -64,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -140,13 +142,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'video_app.CustomUser'
 
 # # CELERY SETTING
-# CELERY_TASK_TRACK_STARTED = True
-# CELERY_TIMEZONE = 'Asia/Kolkata'
-# CELERY_RESULT_BACKEND = 'django-db'
-# CELERY_CACHE_BACKEND = 'django-cache'
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TIMEZONE = 'Asia/Kolkata'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'default'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 # App logging
 LOGGING = {
@@ -170,6 +172,13 @@ LOGGING = {
             'formatter': 'file',
             'maxBytes': 1024*1024*5,
         },
+        'video_convert.file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'video_convert.log',
+            'formatter': 'file',
+            'maxBytes': 1024*1024*5,
+        },
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'console'
@@ -178,6 +187,11 @@ LOGGING = {
     'loggers': {
         'video_app': {
             'handlers': ['console', 'video_app.file'],
+            'level': 'INFO',
+            'propagate': True
+        },
+        'video_convert': {
+            'handlers': ['console', 'video_convert.file'],
             'level': 'INFO',
             'propagate': True
         },
