@@ -20,6 +20,7 @@ class CustomUserChangeForm(UserChangeForm):
 
 class VideoForm(ModelForm):
     
+    # validators=[validate_even]
     class Meta: 
         model = VideoModel
         fields = '__all__'

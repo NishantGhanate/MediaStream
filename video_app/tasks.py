@@ -50,7 +50,16 @@ class VideoConverTask(celery.Task):
 @shared_task(base= VideoConverTask)
 def convert_task(id, file_path):
     video_logger.info('Task received - {}'.format(file_path))
-    result = mp4_hls(id= id, file_path= file_path)
+    result = mp4_hls(file_path= file_path)
     if not result:
+        VideoModel.objects.filter(pk=id).update(
+            video_processing_status = Status.FAILED
+        )
         raise Exception()
+
+    # Save to db
+    VideoModel.objects.filter(pk=id).update(
+        video_processing_status = Status.FINISHED,
+        video_file_m3u8 = result
+    )
     return result

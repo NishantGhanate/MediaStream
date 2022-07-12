@@ -1,12 +1,14 @@
-from asyncio.log import logger
+import os
 import sys
 import datetime
 import logging
 import traceback
 import ffmpeg_streaming
-from ffmpeg_streaming import Formats, Bitrate, Representation, Size
+from ffmpeg_streaming import (
+    Formats, Bitrate, Representation, Size,
+    FFProbe
+)
 
-from video_app.models import VideoModel
 
 video_logger = logging.getLogger('video_convert')
 
@@ -67,24 +69,37 @@ def monitor(ffmpeg, duration, time_, time_left, process):
     )
     sys.stdout.flush()
 
-def mp4_hls(id , file_path):
+def mp4_hls(file_path):
     """
     Takes two params for video model instance
-    @id : int
-    @file_path : str
+    @params:
+        id - int
+        file_path - str 
+    
+    @rtype :
+        converted_path - (None| abspath of m3u8)
 
     """
-    converted = False
+    converted_path = None
     try :
         video_logger.info('Starting m3u8 file conversion for : {}'.format(file_path))
-        # video = ffmpeg_streaming.input(file_path)
-        # hls = video.hls(Formats.h264())
-        # hls.representations(_480p, _720p, _1080p)
-        # hls.output('D:\Projects\django-hls\media\BigBuckBunny_hls.m3u8')
-        converted = True
+        save_path = file_path.rsplit(os.sep, 1)
+        m3u8_name = save_path[1].rsplit('.', 1)[0]
+        m3u8_name = '{}_hls.m3u8'.format(m3u8_name)
+        m3u8_path = os.path.join(save_path[0], m3u8_name)
+       
+        video = ffmpeg_streaming.input(file_path)
+        hls = video.hls(Formats.h264())
+        hls.representations(_480p, _720p, _1080p)
+        hls.output(m3u8_path, monitor= monitor)
+        video_logger.info('Saving file : {}'.format(m3u8_path))
+
+        converted_path = m3u8_path.split('media')[1]
+        if '\\' in converted_path:
+            converted_path = converted_path.replace('\\', '/')
     except :
         video_logger.error(traceback.format_exc())
     
-    return converted
+    return converted_path
     
     
