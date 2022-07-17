@@ -1,4 +1,5 @@
 import os
+import shutil
 import logging
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
@@ -6,26 +7,32 @@ from django.dispatch import receiver
 from video_app.models import VideoModel
 from video_app.tasks import convert_task
 
-logger = logging.getLogger('videp_app')
+va_logger = logging.getLogger('video_app')
 
 @receiver(post_save, sender= VideoModel)
-def on_video_save(sender, **kwargs):
-    logger.info('Video file saved - {}'.format(
-        kwargs['instance'].video_file_name
+def on_video_save(sender, instance, **kwargs):
+    va_logger.info('Video file saved - {}'.format(
+        instance.video_file_path
     ))
-    
     convert_task.delay(
-        id= kwargs['instance'].id,
-        file_path= kwargs['instance'].video_file_name.path
+        id= instance.id,
+        file_path= instance.video_file_path.path
     )
     
-
 @receiver(post_delete, sender=VideoModel)
 def delete_media(sender, instance, **kwargs):
-    if instance.video_thumbnail:
-        if os.path.isfile(instance.video_thumbnail.path):
-            os.remove(instance.video_thumbnail.path)
     
-    if instance.video_file_name:
-        if os.path.isfile(instance.video_file_name.path):
-            os.remove(instance.video_file_name.path)
+    if (instance.video_file_path and 
+        os.path.isfile(instance.video_file_path.path)):
+        try :
+            dir_path= instance.video_file_path.path
+            dir_path = dir_path.rsplit(os.sep, 1)[0]
+            shutil.rmtree(dir_path, ignore_errors=True)
+
+        except OSError as e:
+            va_logger.error("Error: %s : %s" % (dir_path, e.strerror))
+
+
+    va_logger.info('Video Deleted - {}'.format(
+        instance.video_file_path.path
+    ))

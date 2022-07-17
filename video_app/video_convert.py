@@ -10,7 +10,7 @@ from ffmpeg_streaming import (
 )
 
 
-video_logger = logging.getLogger('video_convert')
+vc_logger = logging.getLogger('video_convert')
 
 _480p  = Representation(Size(854, 480), Bitrate(750 * 1024, 192 * 1024))
 _720p  = Representation(Size(1280, 720), Bitrate(2048 * 1024, 320 * 1024))
@@ -77,29 +77,60 @@ def mp4_hls(file_path):
         file_path - str 
     
     @rtype :
-        converted_path - (None| abspath of m3u8)
+        meta_data - dict
 
     """
-    converted_path = None
+    meta_data = {}
     try :
-        video_logger.info('Starting m3u8 file conversion for : {}'.format(file_path))
+        vc_logger.info('Starting m3u8 file conversion for : {}'.format(file_path))
         save_path = file_path.rsplit(os.sep, 1)
+       
+        ffprobe = FFProbe(file_path) 
+        video_format = ffprobe.format()
+        first_video = ffprobe.streams().video()
+        first_audio = ffprobe.streams().audio()
+
+        # duration: 00:00:10.496
+        # size: 290k - 2.9mb
+        dimension = '{}x{}'.format(
+            first_video.get('width', "-"),
+            first_video.get('height', "-")
+        )
+        file_size = round(int(video_format.get('size', 0)) / 1024)
+        file_size = '{}k'.format(file_size)
+        duration = datetime.timedelta(
+            seconds=float(video_format.get('duration', 0))
+        )
+        meta_data = {
+            'duration' : str(duration),
+            'file_size' : file_size,
+            'dimension' : dimension,
+            'display_aspect_ratio' : first_video.get('display_aspect_ratio', '-'),
+            'overall_bit_rate' : round(int(video_format.get('bit_rate', 0)) / 1024),
+            'video_bitrate' : round(int(first_video.get('bit_rate', 0)) / 1024),
+            'auido_bitrate' : round(int(first_audio.get('bit_rate', 0)) / 1024)   
+        }
         m3u8_name = save_path[1].rsplit('.', 1)[0]
         m3u8_name = '{}_hls.m3u8'.format(m3u8_name)
         m3u8_path = os.path.join(save_path[0], m3u8_name)
-       
         video = ffmpeg_streaming.input(file_path)
         hls = video.hls(Formats.h264())
         hls.representations(_480p, _720p, _1080p)
         hls.output(m3u8_path, monitor= monitor)
-        video_logger.info('Saving file : {}'.format(m3u8_path))
-
+        
         converted_path = m3u8_path.split('media')[1]
         if '\\' in converted_path:
             converted_path = converted_path.replace('\\', '/')
+
+        meta_data['path'] = converted_path
+        
     except :
-        video_logger.error(traceback.format_exc())
-    
-    return converted_path
+        vc_logger.error(traceback.format_exc())
+        meta_data = {
+            'error' : str(traceback.format_exc())
+        }
+        
+        
+    return meta_data
     
     
