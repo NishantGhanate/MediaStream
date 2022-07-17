@@ -1,19 +1,31 @@
 import logging
+import traceback
 from django.views import View
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from video_app.models import VideoModel
 
-logger = logging.getLogger('video_app')
+va_logger = logging.getLogger('video_app')
 
 class HomeView(View):
     template_name = 'videos/videos_page.html'
 
     def get(self, request, *args, **kwargs):
+        context = {}
         videos = VideoModel.objects.all()
-        return render(request, self.template_name, context= {
-            'videos' : videos
-        })
+        paginator = Paginator(videos, 10)
+        page = request.GET.get('page', 1)
+        try:
+            videos = paginator.page(page)
+        except PageNotAnInteger:
+            videos = paginator.page(1)
+        except EmptyPage:
+            videos = paginator.page(paginator.num_pages)
+
+        context['videos'] = videos
+        return render(request, self.template_name, context= context)
 
     def post(self, request, *args, **kwargs):
         # form = self.form_class(request.POST)
@@ -29,10 +41,10 @@ class WatchVideoView(View):
     def get(self, request, *args, **kwargs):
         video = None
         try:
-            # video = VideoModel.objects.get(video_title_slug = kwargs['video_title'])
-            v = 1
+            video = VideoModel.objects.get(title_slug = kwargs['video_title'])
         except :
-            pass
+            va_logger.error(traceback.format_exc())
+            # TODO : redirect to home page
         
         return render(request, self.template_name, context= {
             'video' : video

@@ -2,15 +2,17 @@
 
 {% block content %}
 
+<!-- <p> {{video}} , {{MEDIA_URL}}{{video.m3u8_file_path}}</p> -->
 
-<video-js id="video" class="vjs-default-skin" controls 
-    poster="{{MEDIA_URL}}{{video.video_thumbnail}}" >
+<video-js id="video-player" class="vjs-default-skin" controls 
+    poster="{{MEDIA_URL}}{{video.thumbnail}}" >
     <source
-       src="{{MEDIA_URL}}{{video.video_file_m3u8}}" 
+       src="{{MEDIA_URL}}{{video.m3u8_file_path}}" 
        type="application/x-mpegURL">
 </video-js>
 
 <script>
-    var player = videojs('video');
+    var player = videojs('video-player');
+    console.log(player);
 </script>
 {% endblock %}
