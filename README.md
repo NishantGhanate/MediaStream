@@ -14,15 +14,10 @@ A django web application to stream video content using .m3u8
 ### 2. Setup 
 ```
 - git clone https://github.com/NishantGhanate/MediaStream.git
-
 - cd MediaStream
-
 - pip install virutalenv
-
 - python -m virtualenv venv
-
 - venv.bat or venv\Scripts\activate
-
 - pip install -r requirements.txt 
 ```
 
@@ -50,18 +45,24 @@ DB_PASSWORD = my_pwd
 DB_HOST = localhost
 DB_PORT = 5432
 
+# REDIS
+CELERY_BROKER_URL = redis://localhost:6379/1
+
+# Rabbit MQ
+CELERY_BROKER_URL = amqp://guest:**@127.0.0.1:5672//
+
 # Timezone 
 TIME_ZONE = Asia/Kolkata
+
+# Cache
+CACHE_LOCATION = redis://localhost:6379/0
 ```
 
 ### 5. Run server
 ```
 - python manage.py makemigrations
-
 - python manage.py migrate
-
 - python manage.py createsuperuser
-
 - python manage.py runserver 0.0.0.0:8000
 ```
 
@@ -69,13 +70,37 @@ TIME_ZONE = Asia/Kolkata
 
 ## Celery Setup 
 
-In order to use celery we need to setup two things first
+In order to use celery we need to setup 
+
+- Redis
+
+OR 
+
 - Erlang
 - RabbitMQ on windows 
 
+<br>
+
+### Redis Requirements
+
+- Redis on wsl 2
+- redisInsight-v2 [https://redis.com/redis-enterprise/redis-insight/#insight-form]
+
+
+### Install Redis
+```
+- sudo apt-get install redis
+- redis-server start
+
+Open another wsl2 terminal 
+
+- redis-cli 
+```
+
+<hr>
 
 ### Rabbit MQ
-Using Chocolatey (ps on admin mode):
+Using Chocolatey (power shell on admin mode):
 > choco install rabbitmq
 
 OR 
@@ -107,25 +132,23 @@ Note: Don't include bin on above step.
 > rabbitmqctl.bat status
 > rabbitmq-service.bat start | stop
 ```
+
 Open : http://localhost:15672/mgmt
 ```yml
 Username: guest
 Password: guest
 ```
+<hr>
 
-### 3. Run Celery 
+###  Run Celery 
 ```
+celery --app media_stream worker -l info --pool=solo
+
+<syntax> 
 celery --app <project_name> worker -l info --pool=solo
 celery -A <project_name> worker -l INFO
 celery -A <project_name> worker -l info -Q celery, high
-
-celery --app media_stream worker -l info --pool=solo
 ```
 
 Note : Make to sure to run migration if you have installed celery later
 
-## Redis Setup
-
-Requirements 
-- Redis on wsl 2
-- redisInsight-v2

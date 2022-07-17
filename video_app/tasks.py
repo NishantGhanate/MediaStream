@@ -1,11 +1,15 @@
 import logging
 import celery
+from datetime import datetime
 from celery import shared_task
+from django_celery_results.models import TaskResult
 
 from video_app.video_convert import mp4_hls
-from video_app.models import VideoModel, Status
+from video_app.models import Status, VideoModel
 
-video_logger = logging.getLogger('video_convert')
+from media_stream.utils.custom_exceptions import VideoProcessFailed
+
+vc_logger = logging.getLogger('video_convert')
 
 class MyBaseClassForTask(celery.Task):
 
@@ -40,26 +44,42 @@ def factorial(n):
 class VideoConverTask(celery.Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        video_logger.error('{0!r} failed: {1!r}'.format(task_id, exc))
+        vc_logger.error('{0!r} failed: {1!r}'.format(task_id, exc))
+        # TaskResult.objects.filter(task_id=task_id).update(traceback = '')
 
     def on_success(self, retval, task_id, args, kwargs):
-        video_logger.info('success : {}'.format(kwargs['file_path']))
+        vc_logger.info('success : {}'.format(kwargs['file_path']))
 
         print(kwargs['id'], kwargs['file_path'])
 
 @shared_task(base= VideoConverTask)
 def convert_task(id, file_path):
-    video_logger.info('Task received - {}'.format(file_path))
+    vc_logger.info('video id = {}, Task received - {}'.format(id, file_path))
+    # Before process call 
+    before = datetime.now()
     result = mp4_hls(file_path= file_path)
-    if not result:
+    time_took = str(datetime.now() - before)
+   
+    vc_logger.info('result = {}'.format(result))
+    
+    if 'error' in result:
         VideoModel.objects.filter(pk=id).update(
-            video_processing_status = Status.FAILED
+            processing_status = Status.FAILED
         )
-        raise Exception()
+        raise VideoProcessFailed(
+            message= result['error']
+        )
 
-    # Save to db
     VideoModel.objects.filter(pk=id).update(
-        video_processing_status = Status.FINISHED,
-        video_file_m3u8 = result
+        processing_status = Status.FINISHED,
+        processing_completed = time_took,
+        m3u8_file_path = result['path'],
+        duration = result['duration'],
+        file_size = result['file_size'],
+        dimension = result['dimension'],
+        display_aspect_ratio = result['display_aspect_ratio'],
+        overall_bit_rate = result['overall_bit_rate'],
+        video_bitrate = result['video_bitrate'],
+        audio_bitrate = result['auido_bitrate'],
     )
     return result

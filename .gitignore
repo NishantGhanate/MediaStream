@@ -1,6 +1,7 @@
 *.pyc
 *.env
 *.log 
+*.rdb
 
 # Ignore folders
 __pycache__

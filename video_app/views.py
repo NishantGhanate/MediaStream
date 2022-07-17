@@ -29,7 +29,8 @@ class WatchVideoView(View):
     def get(self, request, *args, **kwargs):
         video = None
         try:
-            video = VideoModel.objects.get(video_title_slug = kwargs['video_title'])
+            # video = VideoModel.objects.get(video_title_slug = kwargs['video_title'])
+            v = 1
         except :
             pass
         
