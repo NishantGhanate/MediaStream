@@ -3,6 +3,7 @@ import shutil
 import logging
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.core.cache import cache
 
 from video_app.models import VideoModel
 from video_app.tasks import convert_task
@@ -11,6 +12,10 @@ va_logger = logging.getLogger('video_app')
 
 @receiver(post_save, sender= VideoModel)
 def on_video_save(sender, instance, **kwargs):
+
+    if VideoModel.CACHE_KEY in cache:
+        cache.delete(VideoModel.CACHE_KEY)
+
     va_logger.info('Video file saved - {}'.format(
         instance.video_file_path
     ))
@@ -22,6 +27,9 @@ def on_video_save(sender, instance, **kwargs):
 @receiver(post_delete, sender=VideoModel)
 def delete_media(sender, instance, **kwargs):
     
+    if VideoModel.CACHE_KEY in cache:
+        cache.delete(VideoModel.CACHE_KEY)
+
     if (instance.video_file_path and 
         os.path.isfile(instance.video_file_path.path)):
         try :

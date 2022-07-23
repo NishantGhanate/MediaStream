@@ -1,0 +1,11 @@
+{
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#ff085a"
+    },
+    "editor.rulers": [
+        {
+          "column": 79,
+          "color": "#ff3e0e"
+        }
+    ]
+}

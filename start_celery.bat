@@ -1,0 +1,1 @@
+celery --app media_stream worker -l info --pool=solo

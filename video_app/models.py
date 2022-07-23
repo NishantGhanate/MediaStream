@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 
-
+from video_app.mixins import ModelCacheMixin
 from video_app.managers import CustomUserManager, GetOrNoneManager
 
 logger = logging.getLogger('video_app')
@@ -64,7 +64,9 @@ class Status(models.IntegerChoices):
     STARTED = 1
     FINISHED = 2
 
-class VideoModel(models.Model):
+class VideoModel(models.Model, ModelCacheMixin):
+    CACHE_KEY = "VideoModel"
+    CACHED_RELATED_OBJECT = ["category", "genre_type"]
 
     title = models.CharField(max_length=255, null=False, blank= False)
     title_slug = models.SlugField(null=False, blank= True)
@@ -94,6 +96,9 @@ class VideoModel(models.Model):
 
     objects = GetOrNoneManager()
 
+    class Meta:
+        ordering = ['-id']
+        
     def save(self, *args, **kwargs):
         if not self.id:
             self.title_slug = slugify(self.title)
