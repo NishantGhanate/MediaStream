@@ -3,21 +3,32 @@
 A django web application to stream video content using .m3u8 
 
 
-### 1. Requirements
+# Python setup 
+```
+- sudo add-apt-repository ppa:deadsnakes/ppa
+- sudo apt install python3.10
+- python3.10 --version
+- curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+- python3.10 get-pip.py
+- sudo apt-get install python3.10-distutils
+- python3.10 -m pip --version
+- python3.10 -m pip install virualenv
+- python3.10 -m virtualenv venv
+- pip --version
+```
+
+### 1. System Requirements
 ```
 - Python 3.10
 - Postgres Sql 14
-- Windows 11
-- WSL 2
+- Ubuntu 20.04 WSL 1 on Windows 11
 ```
 
-### 2. Setup 
+### 2. Project Setup 
 ```
 - git clone https://github.com/NishantGhanate/MediaStream.git
 - cd MediaStream
-- pip install virutalenv
-- python -m virtualenv venv
-- venv.bat or venv\Scripts\activate
+- python3.10 -m virtualenv venv
 - pip install -r requirements.txt 
 ```
 

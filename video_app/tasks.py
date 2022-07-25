@@ -2,12 +2,18 @@ import logging
 import celery
 from datetime import datetime
 from celery import shared_task
-from django_celery_results.models import TaskResult
+# from django_celery_results.models import TaskResult
+from django.core.cache import cache
 
 from video_app.video_convert import mp4_hls
 from video_app.models import Status, VideoModel
-
 from media_stream.utils.custom_exceptions import VideoProcessFailed
+
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
 
 vc_logger = logging.getLogger('video_convert')
 
@@ -23,7 +29,6 @@ class MyBaseClassForTask(celery.Task):
         print('{0!r} failed: {1!r}'.format(task_id, exc))
 
     def on_success(self, retval, task_id, args, kwargs):
-        print('WOW factorial done ')
         print('{0!r} success:'.format(task_id))
         print(retval)
         print(args, kwargs)
@@ -35,9 +40,16 @@ def factorial(n):
         return message.format(n= n, fact= n)
 
     fact = 1
+    key_check ='factorial_{}'.format(n)
+    if key_check in cache:
+        fact = cache.get(key_check)
+        print('Value found in cahce')
+        return message.format(n=n, fact=fact)
+
     for i in range(1, n+1):
         fact *= i
 
+    cache.set(key_check, fact, timeout=CACHE_TTL)   
     return message.format(n= n, fact= fact)
 
 
