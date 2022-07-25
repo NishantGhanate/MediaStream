@@ -1,11 +1,47 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="col-6 align-left">
-    <i id="search-icon" class="fas fa-search"></i>
-    <input id="user-input" placeholder="Search">
-</div>
+
+<form class="search-box" method="GET">
+    <input class="search-input" type="text" name="search-title" placeholder="Search">
+    <button class="search-button" href="" type="submit">
+        <i class="material-icons">search</i>
+    </button>
+</form>
 
 {% include "videos/videos_list_page.html" %}
+
+
+<!-- pagination -->
+<div id="pagination-bar">
+	{% if videos.has_other_pages %}
+	<ul class="pagination">
+
+	  {% if videos.has_previous %}
+		<li class="page-item"><a class="page-link" href="?page={{ videos.previous_page_number }}">&laquo;</a></li>
+	  {% else %}
+		<li class="disabled"><a class="page-link">&laquo;</a></li>
+	  {% endif %}
+
+	  {% for i in videos.paginator.page_range %}
+		{% if videos.number == i %}
+		<li class="page-item page-active">
+            <a class="page-link">{{ i }} active
+                <span class="sr-only">(current)</span>
+            </a>
+        </li>
+		{% else %}
+		  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+		{% endif %}
+	  {% endfor %}
+
+	  {% if videos.has_next %}
+		<li class="page-item"><a class="page-link" href="?page={{ videos.next_page_number }}">&raquo;</a></li>
+	  {% else %}
+		<li class="disabled"><a class="page-link">&raquo;</a></li>
+	  {% endif %}
+	</ul>
+	{% endif %}
+</div>
 
 {% endblock %}

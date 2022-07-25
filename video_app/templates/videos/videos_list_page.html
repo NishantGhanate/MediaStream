@@ -1,80 +1,55 @@
 {% load tags %}
 
-<div class="container">
-    {% for v in videos %}
- 
-	<div class="movie-card">
-		<div class="movie-banner">
-			<img class="movie-poster"
-				src="{{MEDIA_URL}}{{v.thumbnail}}" />
-			<div class="movie-header">
-				<div class="header-icon-container">
-					<a href="watch/{{v.title_slug}}">
-						<i class="material-icons play-button" style="font-size: 58px;">play_arrow</i>
-					</a>
-				</div>
-			</div>
-		</div>
-		<!--movie-header-->
-		<div class="movie-content">
-			<div class="movie-content-header">
-				<a href="watch/{{v.title_slug}}">
-					<h3 class="movie-title">{{v.title}}</h3>
-				</a>
-				<div class="imax-logo"></div>
-			</div>
-			<div class="movie-info">
-				<div class="info-section">
-					<label>Type</label>
-					<span>{{v.category}}</span>
-				</div>
-				<!-- -->
-				<div class="info-section">
-					<label>Genre</label>
-					<span>{{v.genre_type}}</span>
-				</div>
-				<!-- -->
-				<div class="info-section">
-					<label>Quality</label>
-					<span>{{v.dimension | quality}}</span>
-				</div>
-				<!-- -->
-				<div class="info-section">
-					<label>Time</label>
-					<span>{{v.duration | duration }}</span>
-				</div>
-				
-			</div>
-		</div>
-		<!--movie-content-->
-	</div>
+{% if not videos %}
+    {% include "error/404.html" %}
+{% endif %}
 
-	</div>
+<div class="movie-container">
+    {% for v in videos %}
+
+    <div class="movie-card">
+
+        <div class="movie-banner">
+            <img class="movie-poster" src="{{MEDIA_URL}}{{v.thumbnail}}"/>
+            <div class="movie-header">
+                <div class="header-icon-container">
+                    <a href="watch/{{v.title_slug}}">
+                        <i class="material-icons play-button">play_arrow</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!--movie-content-->
+        <div class="movie-content">
+            <div class="movie-content-header">
+                <a href="watch/{{v.title_slug}}">
+                    <h3 class="movie-title">{{v.title}}</h3>
+                </a>
+                <!-- <div class="imax-logo"></div> -->
+            </div>
+            <div class="movie-info">
+                <div class="info-section">
+                    <label>Type</label>
+					<span>{{v.category}}</span>
+                </div>
+                <div class="info-section">
+                    <label>Genre</label>
+					<span>{{v.genre_type}}</span>
+                </div>
+                <div class="info-section">
+                    <label>Quality</label>
+					<span>{{v.dimension | quality}}</span>
+                </div>
+                <div class="info-section">
+                    <label>Time</label>
+					<span>{{v.duration | duration }}</span>
+                </div>
+            </div>
+        </div><!--movie-content-->
+        
+    </div> <!-- movie-card -->
+    
 
     {% endfor %}
 </div><!--container-->
 
-<!-- pagination -->
-<div>
-	{% if videos.has_other_pages %}
-	<ul class="pagination">
-	  {% if videos.has_previous %}
-		<li class="page-item"><a class="page-link" href="?page={{ videos.previous_page_number }}">&laquo;</a></li>
-	  {% else %}
-		<li class="disabled"><a class="page-link">&laquo;</a></li>
-	  {% endif %}
-	  {% for i in videos.paginator.page_range %}
-		{% if videos.number == i %}
-		  <li class="page-item"><a class="page-link">{{ i }} <span class="sr-only">(current)</span></a></li>
-		{% else %}
-		  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-		{% endif %}
-	  {% endfor %}
-	  {% if videos.has_next %}
-		<li class="page-item"><a class="page-link" href="?page={{ videos.next_page_number }}">&raquo;</a></li>
-	  {% else %}
-		<li class="disabled"><a class="page-link">&raquo;</a></li>
-	  {% endif %}
-	</ul>
-	{% endif %}
-</div>

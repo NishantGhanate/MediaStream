@@ -9,10 +9,10 @@ class ModelCacheMixin:
     Mixin for models that adds filtering on cached queryset.
 
     @required params:
-        CACHE_KEY : str : - key name used for caching the queryset
+    - CACHE_KEY : str : - key name used for caching the queryset
              
-        CACHED_RELATED_OBJECT:
-            : list - list of foreign key attributes for model that needs to be cached
+    - CACHED_RELATED_OBJECT:
+        list - list of foreign key attributes for model that needs to be cached
 
     """
 
@@ -46,10 +46,14 @@ class ModelCacheMixin:
         """
         cached_qs = cls.cache_all()
         if queryset:
-            filter_qs = cached_qs.filter(queryset)
+            filter_qs = cache.get_or_set(
+                str(queryset), cached_qs.filter(queryset), timeout=CACHE_TTL
+            )
         else:
-            filter_qs = cached_qs.filter(**kwargs)
-        
+            filter_qs = cache.get_or_set(
+                str(kwargs), cached_qs.filter(**kwargs), timeout=CACHE_TTL
+            )
+            
         return filter_qs
 
     @classmethod

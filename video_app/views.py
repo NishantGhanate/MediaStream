@@ -3,7 +3,7 @@ import traceback
 from django.views import View
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Q
+# from django.db.models import Q
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
@@ -13,10 +13,9 @@ va_logger = logging.getLogger('video_app')
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
-
 class HomeView(View):
     template_name = 'videos/main.html'
-    page_size = 10
+    page_size = 12
 
     def get(self, request, *args, **kwargs):
         context = {}
@@ -41,7 +40,6 @@ class HomeView(View):
         context['videos'] = videos
         return render(request, self.template_name, context= context)
 
-
 class WatchVideoView(View):
     template_name = 'videos/watch.html'
 
@@ -50,7 +48,7 @@ class WatchVideoView(View):
         try:
             video = VideoModel.filter_cache(
                 title_slug = kwargs['video_title']
-            ).first()
+                ).first()
             
         except :
             va_logger.error(traceback.format_exc())

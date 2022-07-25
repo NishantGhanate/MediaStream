@@ -7,20 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
 
+
+    <!-- bootstrap -->
+    
+
     <link rel="stylesheet" href="{% static 'css/card.css' %}">
-    <link  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
-    crossorigin="anonymous"
-    rel="stylesheet" as="style" onload="this.onload=null;this.rel='stylesheet'"
-    >
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+
     <!-- video player -->
     <link href="{% static 'css/videos-js.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/video.min.js' %}"></script> 
    
-    
+    <!-- Icons & Fonts -->
     <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css'>
 	<link rel='stylesheet prefetch' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
-	
 	<style class="cp-pen-styles">@import url("https://fonts.googleapis.com/css?family=Arimo:400,700");</style>
 
     <title>{% block title %} Video app home {% endblock%}</title>
