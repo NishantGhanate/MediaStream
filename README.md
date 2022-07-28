@@ -157,9 +157,14 @@ celery --app media_stream worker -l info --pool=solo
 
 <syntax> 
 celery --app <project_name> worker -l info --pool=solo
-celery -A <project_name> worker -l INFO
-celery -A <project_name> worker -l info -Q celery, high
-```
+celery -A media_stream worker -l INFO
+celery -A media_stream worker -l info -Q celery, high
+celery -A media_stream worker -l INFO -Q celery,high  --pool=solo
 
+```
 Note : Make to sure to run migration if you have installed celery later
 
+### Celery Flower
+```
+celery -A media_stream flower --port=5566
+```

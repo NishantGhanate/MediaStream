@@ -168,7 +168,20 @@ CACHES = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
     'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message}',
+            'style': '{',
+        },
         'file': {
             'format': (u'%(asctime)s [%(levelname)-8s] (%(module)s.%(funcName)s) %(message)s'),
             'datefmt': '%Y-%m-%d %H:%M:%S',
@@ -179,17 +192,30 @@ LOGGING = {
         },
     },
     'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'django.server',
+            'filename': './logs/django.log',
+            'formatter': 'file',
+            'maxBytes': 1024*1024*5,
+        },
         'video_app.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'video_app.log',
+            'filename': './logs/video_app.log',
             'formatter': 'file',
             'maxBytes': 1024*1024*5,
         },
         'video_convert.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'video_convert.log',
+            'filename': './logs/video_convert.log',
             'formatter': 'file',
             'maxBytes': 1024*1024*5,
         },
@@ -199,6 +225,11 @@ LOGGING = {
         },
     },
     'loggers': {
+        'django.server': {
+            'handlers': ['console','django.server'],
+            'level': 'INFO',
+            'propagate': False,
+        },
         'video_app': {
             'handlers': ['console', 'video_app.file'],
             'level': 'INFO',

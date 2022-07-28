@@ -15,6 +15,10 @@ def on_video_save(sender, instance, **kwargs):
 
     if VideoModel.CACHE_KEY in cache:
         cache.delete(VideoModel.CACHE_KEY)
+    
+    # keys = cache.keys("*FILTER*")
+    # if keys:
+    #     cache.delete_many(keys)
 
     va_logger.info('Video file saved - {}'.format(
         instance.video_file_path

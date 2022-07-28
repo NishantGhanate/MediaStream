@@ -7,6 +7,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
+# from django.views.decorators.cache import cache_page
+# from django.utils.decorators import method_decorator
+
 from video_app.models import VideoModel
 
 va_logger = logging.getLogger('video_app')
@@ -19,7 +22,7 @@ class HomeView(View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-
+        
         search_title = request.GET.get("search-title")
         if search_title:
             videos = VideoModel.filter_cache(
@@ -27,7 +30,7 @@ class HomeView(View):
             )
         else:
             videos = VideoModel.cache_all()
-        
+        va_logger.info(videos)
         paginator = Paginator(videos, HomeView.page_size)
         page = request.GET.get('page', 1)
         try:
@@ -37,7 +40,10 @@ class HomeView(View):
         except EmptyPage:
             videos = paginator.page(paginator.num_pages)
 
-        context['videos'] = videos
+        if videos:
+            context['videos'] = videos
+        elif search_title:
+            context['error_message'] = f'Sorry could not find {search_title}'
         return render(request, self.template_name, context= context)
 
 class WatchVideoView(View):
