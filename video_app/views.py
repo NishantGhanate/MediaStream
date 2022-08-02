@@ -4,17 +4,11 @@ from django.views import View
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.db.models import Q
-from django.conf import settings
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
-
-# from django.views.decorators.cache import cache_page
-# from django.utils.decorators import method_decorator
 
 from video_app.models import VideoModel
 
 va_logger = logging.getLogger('video_app')
 
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 class HomeView(View):
     template_name = 'videos/main.html'
@@ -30,7 +24,7 @@ class HomeView(View):
             )
         else:
             videos = VideoModel.cache_all()
-        va_logger.info(videos)
+        
         paginator = Paginator(videos, HomeView.page_size)
         page = request.GET.get('page', 1)
         try:

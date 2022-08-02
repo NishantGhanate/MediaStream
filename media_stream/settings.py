@@ -128,7 +128,7 @@ STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'video_app'),
+    os.path.join(BASE_DIR, STATIC_URL, 'video_app'),
 )
 
 # Media storage path 
@@ -175,6 +175,9 @@ LOGGING = {
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
+        'add_ip_address': {
+            '()': 'media_stream.utils.custom_logfilter.IPAddressFilter' 
+        }
     },
     'formatters': {
         'django.server': {
@@ -182,12 +185,16 @@ LOGGING = {
             'format': '[{server_time}] {message}',
             'style': '{',
         },
-        'file': {
-            'format': (u'%(asctime)s [%(levelname)-8s] (%(module)s.%(funcName)s) %(message)s'),
+        'ip_request': {
+            'format': (u'%(asctime)s [%(levelname)-5s] - %(ip)s  %(message)s'),
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'process' :{
+            'format': (u'%(asctime)s [%(levelname)-5s] (%(module)s.%(funcName)s) %(message)s'),
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
         'console': {
-            'format': (u'%(asctime)s [%(levelname)-8s] (%(module)s.%(funcName)s) %(message)s'),
+            'format': (u'%(asctime)s [%(levelname)-5s] (%(module)s.%(funcName)s) %(message)s'),
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
     },
@@ -200,24 +207,26 @@ LOGGING = {
         'django.server': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'django.server',
             'filename': './logs/django.log',
-            'formatter': 'file',
+            'formatter': 'ip_request',
             'maxBytes': 1024*1024*5,
+            "backupCount": 3
         },
         'video_app.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': './logs/video_app.log',
-            'formatter': 'file',
+            'formatter': 'process',
             'maxBytes': 1024*1024*5,
+            "backupCount": 3
         },
         'video_convert.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': './logs/video_convert.log',
-            'formatter': 'file',
+            'formatter': 'process',
             'maxBytes': 1024*1024*5,
+            "backupCount": 3
         },
         'console': {
             'class': 'logging.StreamHandler',
@@ -229,11 +238,12 @@ LOGGING = {
             'handlers': ['console','django.server'],
             'level': 'INFO',
             'propagate': False,
+            'filters': ['add_ip_address']
         },
         'video_app': {
             'handlers': ['console', 'video_app.file'],
             'level': 'INFO',
-            'propagate': True
+            'propagate': True,
         },
         'video_convert': {
             'handlers': ['console', 'video_convert.file'],

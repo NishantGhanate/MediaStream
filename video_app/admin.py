@@ -1,13 +1,17 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django_celery_results.admin import TaskResultAdmin
+from django_celery_results.models import TaskResult
 
 from video_app.models import (
-    CustomUser, CategoryModel,
-    GenereModel, VideoModel
+    CustomUser, LanguageModel, CategoryModel, GenreModel, VideoModel
 )
 from video_app.forms import (
-    CustomUserCreationForm, CustomUserChangeForm, VideoForm
+    CustomUserCreationForm, CustomUserChangeForm, LanguageForm,
+    VideoForm
 )
+from .admin_actions import retry_celery_task_admin_action
+
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
@@ -30,6 +34,10 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
 
+class LanguageAdmin(admin.ModelAdmin):
+    readonly_fields = ('name_slug',)
+    form = LanguageForm
+
 class VideoAdmin(admin.ModelAdmin):
     readonly_fields = (
         'title_slug', 'm3u8_file_path', 'processing_completed',
@@ -40,7 +48,15 @@ class VideoAdmin(admin.ModelAdmin):
     )
     form = VideoForm
 
+class CustomTaskResultAdmin(TaskResultAdmin):
+    actions = [retry_celery_task_admin_action, ]
+
+
+admin.site.unregister(TaskResult)
+admin.site.register(TaskResult, CustomTaskResultAdmin)
+
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(GenereModel)
+admin.site.register(LanguageModel, LanguageAdmin)
 admin.site.register(CategoryModel)
+admin.site.register(GenreModel)
 admin.site.register(VideoModel, VideoAdmin)

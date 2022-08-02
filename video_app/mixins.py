@@ -28,7 +28,15 @@ class ModelCacheMixin:
                 "CACHE_KEY must be defined in {}".format(cls.__name__)
             )
 
-        if cls.CACHED_RELATED_OBJECT:
+        if cls.CACHED_RELATED_OBJECT and cls.CACHED_PREFETCH_OBJECT:
+            queryset = cache.get_or_set(
+                cls.CACHE_KEY,
+                cls.objects.all().select_related(*cls.CACHED_RELATED_OBJECT)\
+                    .prefetch_related(*cls.CACHED_PREFETCH_OBJECT),
+                timeout=CACHE_TTL
+            )
+
+        elif cls.CACHED_RELATED_OBJECT:
             queryset = cache.get_or_set(
                 cls.CACHE_KEY,
                 cls.objects.all().select_related(*cls.CACHED_RELATED_OBJECT),

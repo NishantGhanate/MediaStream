@@ -29,7 +29,7 @@
                 </div>
                 <div class="info-section">
                     <label>Genre</label>
-					<span>{{v.genre_type}}</span>
+					<span>{{v.genre.all | genre }}</span>
                 </div>
                 <div class="info-section">
                     <label>Quality</label>
@@ -40,6 +40,7 @@
 					<span>{{v.duration | duration }}</span>
                 </div>
             </div>
+           
         </div><!--movie-content-->
         
     </div> <!-- movie-card -->
