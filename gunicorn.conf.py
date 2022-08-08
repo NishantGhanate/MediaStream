@@ -1,3 +1,5 @@
+# gunicorn media_stream.wsgi  -c gunicorn.conf.py
+
 # Non logging stuff
 bind = "0.0.0.0:8000"
 workers = 3

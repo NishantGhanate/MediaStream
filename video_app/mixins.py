@@ -3,7 +3,7 @@ from django.core.cache import cache
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
-FILTER_PREFIX = '_FILTER_'
+
 
 class ModelCacheMixin:
     """
@@ -55,12 +55,12 @@ class ModelCacheMixin:
         """
         cached_qs = cls.cache_all()
         if queryset:
-            key = f"{cls.CACHE_KEY}{FILTER_PREFIX}{queryset}"
+            key = f"{cls.CACHE_KEY}{queryset}"
             filter_qs = cache.get_or_set(
                 key, cached_qs.filter(queryset), timeout=CACHE_TTL
             )
         else:
-            key = f"{cls.CACHE_KEY}{FILTER_PREFIX}{kwargs}"
+            key = f"{cls.CACHE_KEY}{kwargs}"
             filter_qs = cache.get_or_set(
                 key, cached_qs.filter(**kwargs), timeout=CACHE_TTL
             )
