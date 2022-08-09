@@ -1,1 +1,1 @@
-echo celery --app media_stream worker -l info --pool=solo
+exec  celery --app media_stream worker -l info --pool=solo

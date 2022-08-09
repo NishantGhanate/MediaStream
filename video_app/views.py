@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.db.models import Q
 
-from video_app.models import TvChannelModel, VideoModel
+from video_app.models import Status, VideoModel, TvChannelModel
 
 va_logger = logging.getLogger('video_app')
 
@@ -23,7 +23,7 @@ class HomeView(View):
                 title__icontains= search_title
             )
         else:
-            videos = VideoModel.cache_all()
+            videos = VideoModel.filter_cache(processing_status= Status.FINISHED)
         
         paginator = Paginator(videos, HomeView.page_size)
         page = request.GET.get('page', 1)

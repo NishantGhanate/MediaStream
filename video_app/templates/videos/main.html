@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 
-{% block content %}
-
-<form class="search-box" method="GET">
-    <input class="search-input" type="text" name="search-title" placeholder="Search">
+{% block navbar %}
+<li class="nav-item">
     <button class="search-button" href="" type="submit">
         <i class="material-icons">search</i>
     </button>
-</form>
+</li>
+{% endblock %}
 
+{% block content %}
 
-{% if videos %}
-	{% include "videos/videos_list_page.html" %}
-{% else %}
-	{% include "error/error.html" %}
-{% endif %}
+    {% if videos %}
+        {% include "videos/videos_list_page.html" %}
+    {% else %}
+        {% include "error/error.html" %}
+    {% endif %}
 
 {% endblock %}

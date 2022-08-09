@@ -9,9 +9,12 @@
 
 
     <!-- bootstrap -->
-    <link rel="stylesheet" href="{% static 'css/card.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/card.css' %}">
     <link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+
+
+   
 
     <!-- video player -->
     <link href="{% static 'css/videos-js.min.css' %}" rel="stylesheet">
@@ -26,8 +29,37 @@
     <title>{% block title %} Video app home {% endblock%}</title>
 </head>
 <body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="/" class="nav-logo">Oneiro</a>
+            <ul class="nav-menu">
+                {% block navbar %}
+
+                {% endblock %}
+                <li class="nav-item">
+                    <a href="/" class="nav-link">Video</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/tv" class="nav-link">Tv Channels</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
 {% block content %}
 
 {% endblock %}
+<script src="{% static 'js/main.js' %}"></script> 
 </body>
 </html>

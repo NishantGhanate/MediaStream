@@ -5,7 +5,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.cache import cache
 
-from video_app.models import VideoModel
+from video_app.models import TvChannelModel, VideoModel
 from video_app.tasks import convert_task
 
 va_logger = logging.getLogger('video_app')
@@ -16,9 +16,9 @@ def on_video_save(sender, instance, **kwargs):
     if VideoModel.CACHE_KEY in cache:
         cache.delete(VideoModel.CACHE_KEY)
     
-    # keys = cache.keys("*FILTER*")
-    # if keys:
-    #     cache.delete_many(keys)
+    keys = cache.keys("*FILTER*")
+    if keys:
+        cache.delete_many(keys)
 
     va_logger.info('Video file saved - {}'.format(
         instance.video_file_path
@@ -48,3 +48,15 @@ def delete_media(sender, instance, **kwargs):
     va_logger.info('Video Deleted - {}'.format(
         instance.video_file_path.path
     ))
+
+@receiver(post_save, sender= TvChannelModel)
+def on_tvchannel_save(sender, instance, **kwargs):
+
+    if TvChannelModel.CACHE_KEY in cache:
+        cache.delete(TvChannelModel.CACHE_KEY)
+    
+    # keys = cache.keys("*FILTER*")
+    # if keys:
+    #     cache.delete_many(keys)
+
+    
