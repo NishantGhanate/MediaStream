@@ -25,6 +25,12 @@ python manage.py loaddata ./video_app/data_backup/model_name.json
 python manage.py migrate video_app 0002_languagemodel
 
 python manage.py migrate --fake video_app 0002_languagemodel
+
+or 
+Take table data backup and clear migration log of speific model
+DELETE FROM public.django_migrations
+WHERE id= 37;
+
 ```
 
 ### ffmeg - fprobe

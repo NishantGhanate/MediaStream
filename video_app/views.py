@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.db.models import Q
 
-from video_app.models import VideoModel
+from video_app.models import TvChannelModel, VideoModel
 
 va_logger = logging.getLogger('video_app')
 
@@ -41,7 +41,7 @@ class HomeView(View):
         return render(request, self.template_name, context= context)
 
 class WatchVideoView(View):
-    template_name = 'videos/watch.html'
+    template_name = 'videos/watch_video.html'
 
     def get(self, request, *args, **kwargs):
         video = None
@@ -57,4 +57,51 @@ class WatchVideoView(View):
         return render(request, self.template_name, context= {
             'video' : video
         })
-    
+
+class TvView(View):
+    template_name = 'tv/main.html'
+    page_size = 12
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        
+        search_channel= request.GET.get("search-channel")
+        if search_channel:
+            channels = TvChannelModel.filter_cache(
+                channel_name__icontains= search_channel
+            )
+        else:
+            channels = TvChannelModel.cache_all()
+        
+        paginator = Paginator(channels, HomeView.page_size)
+        page = request.GET.get('page', 1)
+        try:
+            channels = paginator.page(page)
+        except PageNotAnInteger:
+            channels = paginator.page(1)
+        except EmptyPage:
+            channels = paginator.page(paginator.num_pages)
+
+        if channels:
+            context['channels'] = channels
+        elif search_channel:
+            context['error_message'] = f'Sorry could not find {search_channel}'
+        return render(request, self.template_name, context= context)
+
+class ChannelView(View):
+    template_name = 'tv/watch_channel.html'
+
+    def get(self, request, *args, **kwargs):
+        channel = None
+        try:
+            channel = TvChannelModel.filter_cache(
+                channel_name_slug = kwargs['channel_name_slug']
+                ).first()
+            
+        except :
+            va_logger.error(traceback.format_exc())
+            # TODO : renders ops page
+        
+        return render(request, self.template_name, context= {
+            'channel' : channel
+        })

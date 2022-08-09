@@ -1,0 +1,78 @@
+{% load tags %}
+
+<div class="movie-container">
+    {% for c in channels %}
+
+    <div class="movie-card">
+        <div class="movie-banner">
+            <img class="movie-poster" src="{{MEDIA_URL}}{{c.thumbnail}}"/>
+            <div class="movie-header">
+                <div class="header-icon-container">
+                    <a href="tv/{{c.channel_name_slug}}">
+                        <i class="material-icons play-button">play_arrow</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!--movie-content-->
+        <div class="movie-content">
+            <div class="movie-content-header">
+                <a href="tv/{{c.channel_name_slug}}">
+                    <h3 class="movie-title">{{c.channel_name}}</h3>
+                </a>
+                <!-- <div class="imax-logo"></div> -->
+            </div>
+            <div class="movie-info">
+                <div class="info-section">
+                    <label>Language</label>
+					<span>{{c.language}}</span>
+                </div>
+                <div class="info-section">
+                    <label>Category</label>
+					<span>{{c.category}}</span>
+                </div>
+                <div class="info-section">
+                    <label>Quality</label>
+					<span>HD</span>
+                </div>
+                
+            </div>
+           
+        </div><!--movie-content-->
+        
+    </div> <!-- movie-card -->
+    {% endfor %}
+
+</div><!--container-->
+
+<!-- pagination -->
+<div id="pagination-bar">
+	{% if channels.has_other_pages %}
+	<ul class="pagination">
+
+	  {% if channels.has_previous %}
+		<li class="page-item"><a class="page-link" href="?page={{ channels.previous_page_number }}">&laquo;</a></li>
+	  {% else %}
+		<li class="disabled"><a class="page-link">&laquo;</a></li>
+	  {% endif %}
+
+	  {% for i in channels.paginator.page_range %}
+		{% if channels.number == i %}
+		<li class="page-item page-active">
+            <a class="page-link">{{ i }} active
+                <span class="sr-only">(current)</span>
+            </a>
+        </li>
+		{% else %}
+		  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+		{% endif %}
+	  {% endfor %}
+
+	  {% if videos.has_next %}
+		<li class="page-item"><a class="page-link" href="?page={{ channels.next_page_number }}">&raquo;</a></li>
+	  {% else %}
+		<li class="disabled"><a class="page-link">&raquo;</a></li>
+	  {% endif %}
+	</ul>
+	{% endif %}
+</div>

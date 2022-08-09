@@ -27,12 +27,19 @@ def USER_DIRECTORY_PATH(instance, file_name):
                 file_name
             ]
         else:
-            storage_path = ['common', file_name]
+            storage_path = [instance.__name__, file_name]
 
         return os_slash.join(storage_path)
     except :
         logger.error(traceback.format_exc())
-    
+
+def STORE_TV_THUMBNAIL(instance, file_name):
+    print(instance.__dict__)
+    print(instance._meta.model_name)
+    storage_path = [instance._meta.model_name, file_name]
+
+    return os_slash.join(storage_path)
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField('email address', unique=True)
@@ -140,3 +147,31 @@ class VideoModel(models.Model, ModelCacheMixin):
     
     def __str__(self):
         return '{} - {}'.format(self.title, self.category)
+
+class TvChannelModel(models.Model, ModelCacheMixin):
+    CACHE_KEY = "TvChannel"
+    CACHED_RELATED_OBJECT = ["language", "category"]
+    CACHED_PREFETCH_OBJECT = None
+
+    channel_name = models.CharField(max_length=255, blank= False)
+    channel_name_slug = models.SlugField(blank= True)
+    description = models.TextField(null=True, blank=True)
+    m3u8_url = models.URLField()
+    thumbnail = models.ImageField(upload_to=STORE_TV_THUMBNAIL)
+    language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(CategoryModel, on_delete=models.SET_NULL, null=True)
+    objects = GetOrNoneManager()
+
+    class Meta:
+        ordering = ['-id']
+        unique_together = ['channel_name', 'language']
+        
+        
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.channel_name_slug = slugify(self.channel_name)
+            
+        super(TvChannelModel, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return '{} - {}'.format(self.channel_name, self.language)

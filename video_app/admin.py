@@ -4,7 +4,8 @@ from django_celery_results.admin import TaskResultAdmin
 from django_celery_results.models import TaskResult
 
 from video_app.models import (
-    CustomUser, LanguageModel, CategoryModel, GenreModel, VideoModel
+    CustomUser, LanguageModel, CategoryModel, GenreModel, TvChannelModel,
+    VideoModel
 )
 from video_app.forms import (
     CustomUserCreationForm, CustomUserChangeForm, LanguageForm,
@@ -60,3 +61,4 @@ admin.site.register(LanguageModel, LanguageAdmin)
 admin.site.register(CategoryModel)
 admin.site.register(GenreModel)
 admin.site.register(VideoModel, VideoAdmin)
+admin.site.register(TvChannelModel)
