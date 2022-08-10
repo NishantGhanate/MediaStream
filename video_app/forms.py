@@ -1,8 +1,9 @@
 from django.forms import ModelForm, FileInput
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from video_app.models import CustomUser, VideoModel
-
+from video_app.models import (
+    CustomUser, LanguageModel, VideoModel
+)
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -17,6 +18,11 @@ class CustomUserChangeForm(UserChangeForm):
         model = CustomUser
         fields = ('email',)
 
+class LanguageForm(ModelForm):
+    
+    class Meta: 
+        model = LanguageModel
+        fields = '__all__'
 
 class VideoForm(ModelForm):
     

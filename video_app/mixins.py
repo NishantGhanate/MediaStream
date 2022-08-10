@@ -4,6 +4,7 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
+
 class ModelCacheMixin:
     """
     Mixin for models that adds filtering on cached queryset.
@@ -27,7 +28,15 @@ class ModelCacheMixin:
                 "CACHE_KEY must be defined in {}".format(cls.__name__)
             )
 
-        if cls.CACHED_RELATED_OBJECT:
+        if cls.CACHED_RELATED_OBJECT and cls.CACHED_PREFETCH_OBJECT:
+            queryset = cache.get_or_set(
+                cls.CACHE_KEY,
+                cls.objects.all().select_related(*cls.CACHED_RELATED_OBJECT)\
+                    .prefetch_related(*cls.CACHED_PREFETCH_OBJECT),
+                timeout=CACHE_TTL
+            )
+
+        elif cls.CACHED_RELATED_OBJECT:
             queryset = cache.get_or_set(
                 cls.CACHE_KEY,
                 cls.objects.all().select_related(*cls.CACHED_RELATED_OBJECT),
@@ -46,12 +55,14 @@ class ModelCacheMixin:
         """
         cached_qs = cls.cache_all()
         if queryset:
+            key = f"{cls.CACHE_KEY}{queryset}"
             filter_qs = cache.get_or_set(
-                str(queryset), cached_qs.filter(queryset), timeout=CACHE_TTL
+                key, cached_qs.filter(queryset), timeout=CACHE_TTL
             )
         else:
+            key = f"{cls.CACHE_KEY}{kwargs}"
             filter_qs = cache.get_or_set(
-                str(kwargs), cached_qs.filter(**kwargs), timeout=CACHE_TTL
+                key, cached_qs.filter(**kwargs), timeout=CACHE_TTL
             )
             
         return filter_qs

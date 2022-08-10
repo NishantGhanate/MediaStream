@@ -1,0 +1,1 @@
+All the logs genereated will be stored inside this folder

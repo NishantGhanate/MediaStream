@@ -1,14 +1,14 @@
 {% load tags %}
 
 <div class="movie-container">
-    {% for v in videos %}
+    {% for c in channels %}
 
     <div class="movie-card">
         <div class="movie-banner">
-            <img class="movie-poster" src="{{MEDIA_URL}}{{v.thumbnail}}"/>
+            <img class="movie-poster" src="{{MEDIA_URL}}{{c.thumbnail}}"/>
             <div class="movie-header">
                 <div class="header-icon-container">
-                    <a href="watch/{{v.title_slug}}">
+                    <a href="tv/{{c.channel_name_slug}}">
                         <i class="material-icons play-button">play_arrow</i>
                     </a>
                 </div>
@@ -17,28 +17,25 @@
         <!--movie-content-->
         <div class="movie-content">
             <div class="movie-content-header">
-                <a href="watch/{{v.title_slug}}">
-                    <h3 class="movie-title">{{v.title}}</h3>
+                <a href="tv/{{c.channel_name_slug}}">
+                    <h3 class="movie-title">{{c.channel_name}}</h3>
                 </a>
                 <!-- <div class="imax-logo"></div> -->
             </div>
             <div class="movie-info">
                 <div class="info-section">
-                    <label>Type</label>
-					<span>{{v.category}}</span>
+                    <label>Language</label>
+					<span>{{c.language}}</span>
                 </div>
                 <div class="info-section">
-                    <label>Genre</label>
-					<span>{{v.genre.all | genre }}</span>
+                    <label>Category</label>
+					<span>{{c.category}}</span>
                 </div>
                 <div class="info-section">
                     <label>Quality</label>
-					<span>{{v.dimension | quality}}</span>
+					<span>HD</span>
                 </div>
-                <div class="info-section">
-                    <label>Time</label>
-					<span>{{v.duration | duration }}</span>
-                </div>
+                
             </div>
            
         </div><!--movie-content-->
@@ -50,17 +47,17 @@
 
 <!-- pagination -->
 <div id="pagination-bar">
-	{% if videos.has_other_pages %}
+	{% if channels.has_other_pages %}
 	<ul class="pagination">
 
-	  {% if videos.has_previous %}
-		<li class="page-item"><a class="page-link" href="?page={{ videos.previous_page_number }}">&laquo;</a></li>
+	  {% if channels.has_previous %}
+		<li class="page-item"><a class="page-link" href="?page={{ channels.previous_page_number }}">&laquo;</a></li>
 	  {% else %}
 		<li class="disabled"><a class="page-link">&laquo;</a></li>
 	  {% endif %}
 
-	  {% for i in videos.paginator.page_range %}
-		{% if videos.number == i %}
+	  {% for i in channels.paginator.page_range %}
+		{% if channels.number == i %}
 		<li class="page-item page-active">
             <a class="page-link">{{ i }} active
                 <span class="sr-only">(current)</span>
@@ -72,7 +69,7 @@
 	  {% endfor %}
 
 	  {% if videos.has_next %}
-		<li class="page-item"><a class="page-link" href="?page={{ videos.next_page_number }}">&raquo;</a></li>
+		<li class="page-item"><a class="page-link" href="?page={{ channels.next_page_number }}">&raquo;</a></li>
 	  {% else %}
 		<li class="disabled"><a class="page-link">&raquo;</a></li>
 	  {% endif %}

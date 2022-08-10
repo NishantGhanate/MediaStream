@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block navbar %}
 <li class="nav-item">
     <button class="search-button" href="" type="submit">
@@ -10,8 +11,8 @@
 
 {% block content %}
 
-    {% if videos %}
-        {% include "videos/videos_list_page.html" %}
+    {% if channels %}
+        {% include "tv/channels_list_page.html" %}
     {% else %}
         {% include "error/error.html" %}
     {% endif %}

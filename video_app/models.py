@@ -2,6 +2,7 @@ import logging
 import traceback
 
 from os import sep as os_slash
+from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
@@ -14,18 +15,31 @@ from video_app.mixins import ModelCacheMixin
 from video_app.managers import CustomUserManager, GetOrNoneManager
 
 logger = logging.getLogger('video_app')
-
+# validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
+# 
 def USER_DIRECTORY_PATH(instance, file_name):
     try:
-        return os_slash.join([
-            instance.category.name,
-            instance.category.lang,
-            instance.title_slug,
-            file_name
-        ])
+        if instance.category and instance.language:
+            storage_path = [
+                instance.category.name,
+                instance.language.name,
+                instance.title_slug,
+                file_name
+            ]
+        else:
+            storage_path = [instance.__name__, file_name]
+
+        return os_slash.join(storage_path)
     except :
         logger.error(traceback.format_exc())
-    
+
+def STORE_TV_THUMBNAIL(instance, file_name):
+    print(instance.__dict__)
+    print(instance._meta.model_name)
+    storage_path = [instance._meta.model_name, file_name]
+
+    return os_slash.join(storage_path)
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField('email address', unique=True)
@@ -41,22 +55,52 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-class CategoryModel(models.Model):
-    name = models.CharField(max_length= 50, null=False, blank=False)
-    lang = models.CharField(max_length= 50, null=False, blank=False)
+class LanguageModel(models.Model):
+    name = models.CharField(max_length= 50, null=False, blank=False, unique= True)
+    name_slug = models.SlugField(blank=True)
     objects = GetOrNoneManager()
 
     class Meta:
-        unique_together = ('name', 'lang',)
+        ordering = ['-id']
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.name_slug = slugify(self.name)
+        super(LanguageModel, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '{} - {}'.format(self.lang, self.name)
+        return f'{self.name}'
 
-class GenereModel(models.Model):
-    type = models.CharField(max_length= 100)
+class GenreModel(models.Model):
+    name = models.CharField(max_length= 50, null=False, blank=False)
+    name_slug = models.SlugField(blank=True)
+    objects = GetOrNoneManager()
+
+    class Meta:
+        ordering = ['-id']
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.name_slug = slugify(self.name)
+        super(GenreModel, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.type}'
+        return f'{self.name}'
+
+class CategoryModel(models.Model):
+    name = models.CharField(max_length= 100)
+    name_slug = models.SlugField(blank=True)
+    
+    class Meta:
+        ordering = ['-id']
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.name_slug = slugify(self.name)
+        super(CategoryModel, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.name}'
 
 class Status(models.IntegerChoices):
     FAILED = -1
@@ -66,22 +110,18 @@ class Status(models.IntegerChoices):
 
 class VideoModel(models.Model, ModelCacheMixin):
     CACHE_KEY = "VideoModel"
-    CACHED_RELATED_OBJECT = ["category", "genre_type"]
+    CACHED_RELATED_OBJECT = ["language", "category"]
+    CACHED_PREFETCH_OBJECT = ["genre"]
 
-    title = models.CharField(max_length=255, null=False, blank= False)
-    title_slug = models.SlugField(null=False, blank= True)
+    title = models.CharField(max_length=255, blank= False)
+    title_slug = models.SlugField(blank= True)
     description = models.TextField(null=True, blank=True)
-    video_file_path = models.FileField(
-        upload_to=USER_DIRECTORY_PATH,
-        validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
-    )
+    video_file_path = models.FileField(upload_to=USER_DIRECTORY_PATH)
     m3u8_file_path = models.CharField(max_length=255, blank=True)
-    thumbnail = models.ImageField(
-        upload_to=USER_DIRECTORY_PATH,
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
-    )
+    thumbnail = models.ImageField(upload_to=USER_DIRECTORY_PATH)
+    language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
+    genre = models.ManyToManyField(GenreModel)
     category = models.ForeignKey(CategoryModel, on_delete=models.SET_NULL, null=True)
-    genre_type = models.ForeignKey(GenereModel, on_delete=models.SET_NULL, null=True)
     released_date = models.DateField(null= True, blank=True)
     uploaded_date = models.DateTimeField(auto_now_add=True, editable=False)
     processing_status = models.IntegerField(choices=Status.choices, default= Status.QUEUED)
@@ -107,3 +147,31 @@ class VideoModel(models.Model, ModelCacheMixin):
     
     def __str__(self):
         return '{} - {}'.format(self.title, self.category)
+
+class TvChannelModel(models.Model, ModelCacheMixin):
+    CACHE_KEY = "TvChannel"
+    CACHED_RELATED_OBJECT = ["language", "category"]
+    CACHED_PREFETCH_OBJECT = None
+
+    channel_name = models.CharField(max_length=255, blank= False)
+    channel_name_slug = models.SlugField(blank= True)
+    description = models.TextField(null=True, blank=True)
+    m3u8_url = models.URLField()
+    thumbnail = models.ImageField(upload_to=STORE_TV_THUMBNAIL)
+    language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(CategoryModel, on_delete=models.SET_NULL, null=True)
+    objects = GetOrNoneManager()
+
+    class Meta:
+        ordering = ['-id']
+        unique_together = ['channel_name', 'language']
+        
+        
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.channel_name_slug = slugify(self.channel_name)
+            
+        super(TvChannelModel, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return '{} - {}'.format(self.channel_name, self.language)
