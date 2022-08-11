@@ -9,8 +9,14 @@ from video_app.models import Status, VideoModel, TvChannelModel
 
 va_logger = logging.getLogger('video_app')
 
-
 class HomeView(View):
+    template_name = 'home.html'
+    
+    def get(self, request, *args, **kwargs):
+        context = {}
+        return render(request, self.template_name, context= context)
+    
+class VideoListView(View):
     template_name = 'videos/main.html'
     page_size = 12
 
@@ -25,7 +31,7 @@ class HomeView(View):
         else:
             videos = VideoModel.filter_cache(processing_status= Status.FINISHED)
         
-        paginator = Paginator(videos, HomeView.page_size)
+        paginator = Paginator(videos, VideoListView.page_size)
         page = request.GET.get('page', 1)
         try:
             videos = paginator.page(page)
@@ -40,7 +46,7 @@ class HomeView(View):
             context['error_message'] = f'Sorry could not find {search_title}'
         return render(request, self.template_name, context= context)
 
-class WatchVideoView(View):
+class VideoDetailViiew(View):
     template_name = 'videos/watch_video.html'
 
     def get(self, request, *args, **kwargs):
@@ -58,7 +64,7 @@ class WatchVideoView(View):
             'video' : video
         })
 
-class TvView(View):
+class TvListView(View):
     template_name = 'tv/main.html'
     page_size = 12
 
@@ -73,7 +79,7 @@ class TvView(View):
         else:
             channels = TvChannelModel.cache_all()
         
-        paginator = Paginator(channels, HomeView.page_size)
+        paginator = Paginator(channels, TvListView.page_size)
         page = request.GET.get('page', 1)
         try:
             channels = paginator.page(page)
@@ -88,7 +94,7 @@ class TvView(View):
             context['error_message'] = f'Sorry could not find {search_channel}'
         return render(request, self.template_name, context= context)
 
-class ChannelView(View):
+class TvDetailView(View):
     template_name = 'tv/watch_channel.html'
 
     def get(self, request, *args, **kwargs):

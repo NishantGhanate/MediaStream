@@ -8,18 +8,23 @@ urlpatterns = [
         name='home-view'
     ),
     path(
-        'watch/<slug:video_title>',
-        views.WatchVideoView.as_view(), 
-        name='watch-video-view'
+        'video', 
+        views.VideoListView.as_view(),
+        name='video-list-view'
+    ),
+    path(
+        'video/<slug:video_title>',
+        views.VideoDetailViiew.as_view(), 
+        name='video-detail-view'
     ),
     path(
         'tv', 
-        views.TvView.as_view(),
-        name='tv-view'
+        views.TvListView.as_view(),
+        name='tv-list-view'
     ),
     path(
         'tv/<slug:channel_name_slug>', 
-        views.ChannelView.as_view(),
-        name='channel-view'
+        views.TvDetailView.as_view(),
+        name='tv-detail-view'
     ),
 ]

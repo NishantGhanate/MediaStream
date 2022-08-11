@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
+{% block title %} Videos  {% endblock%}
+
 {% block navbar %}
 <li class="nav-item">
-    <button class="search-button" href="" type="submit">
-        <i class="material-icons">search</i>
-    </button>
+    <form class="search-box" method="GET">
+        <input class="search-input" type="text" name="search-title" placeholder=" search ">
+        <button class="search-button" href="" type="submit">
+            <i class="material-icons">search</i>
+        </button>
+    </form>
 </li>
 {% endblock %}
 
