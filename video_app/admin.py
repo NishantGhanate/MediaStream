@@ -5,7 +5,7 @@ from django_celery_results.models import TaskResult
 
 from video_app.models import (
     CustomUser, LanguageModel, CategoryModel, GenreModel,
-    VideoModel, TvChannelModel
+    VideoModel, TvChannelModel, ContactUsModel
 )
 from video_app.forms import (
     CustomUserCreationForm, CustomUserChangeForm, LanguageForm,
@@ -62,3 +62,4 @@ admin.site.register(CategoryModel)
 admin.site.register(GenreModel)
 admin.site.register(VideoModel, VideoAdmin)
 admin.site.register(TvChannelModel)
+admin.site.register(ContactUsModel)

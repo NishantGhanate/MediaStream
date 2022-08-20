@@ -1,11 +1,12 @@
 import logging
 import traceback
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.db.models import Q
-
+from video_app.forms import ContactUsForm
 from video_app.models import Status, VideoModel, TvChannelModel
+from django.urls import reverse
 
 va_logger = logging.getLogger('video_app')
 
@@ -15,7 +16,31 @@ class HomeView(View):
     def get(self, request, *args, **kwargs):
         context = {}
         return render(request, self.template_name, context= context)
+
+class ContactUsView(View):
+    template_name = 'contact.html'
     
+    def get(self, request, *args, **kwargs):
+        form = ContactUsForm(None)
+        context = {
+            'form' : form
+        }
+        return render(request, self.template_name, context= context)
+
+    def post(self, request, *args, **kwargs):
+        contact_us = ContactUsForm(request.POST)
+        context = {}
+        if contact_us.is_valid():
+            context['form'] = ContactUsForm(None)
+            context['success'] = True
+            context['message'] = 'Thank you contacting us'
+            contact_us.save()
+        else:
+            context['form'] = contact_us
+        return render(request, self.template_name, context= context)
+
+
+
 class VideoListView(View):
     template_name = 'videos/main.html'
     page_size = 12

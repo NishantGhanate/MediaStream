@@ -175,3 +175,15 @@ class TvChannelModel(models.Model, ModelCacheMixin):
     
     def __str__(self):
         return '{} - {}'.format(self.channel_name, self.language)
+
+class ContactUsModel(models.Model):
+    full_name = models.CharField(max_length= 50)
+    mobile_no = models.CharField(max_length= 15)
+    email = models.EmailField(max_length= 75)
+    message = models.TextField(max_length=500)
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return '{} - {}'.format(self.full_name, self.mobile_no)

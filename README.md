@@ -15,6 +15,7 @@ A django web application to stream video content using .m3u8
 - python3.10 -m pip install virualenv
 - python3.10 -m virtualenv venv
 - pip --version
+- apt-get -y install libz-dev libjpeg-dev libfreetype6-dev python-dev
 ```
 
 ### 1. System Requirements

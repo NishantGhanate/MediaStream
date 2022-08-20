@@ -8,6 +8,11 @@ urlpatterns = [
         name='home-view'
     ),
     path(
+        'contact-us', 
+        views.ContactUsView.as_view(),
+        name='contact-us'
+    ),
+    path(
         'video', 
         views.VideoListView.as_view(),
         name='video-list-view'
@@ -26,5 +31,5 @@ urlpatterns = [
         'tv/<slug:channel_name_slug>', 
         views.TvDetailView.as_view(),
         name='tv-detail-view'
-    ),
+    )
 ]

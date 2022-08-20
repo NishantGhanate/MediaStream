@@ -1,24 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %} Tv Channels  {% endblock%}
+{% block title %} Free Tv {% endblock%}
 
-{% block navbar %}
-<li class="nav-item">
-    <form class="search-box" method="GET">
-        <input class="search-input" type="text" name="search-channel" placeholder=" search">
-        <button class="search-button" href="" type="submit">
-            <i class="material-icons">search</i>
-        </button>
-    </form>
-</li>
-{% endblock %}
 
+  
 {% block content %}
+<section class="section colored">
 
     {% if channels %}
         {% include "tv/channels_list_page.html" %}
     {% else %}
         {% include "error/error.html" %}
     {% endif %}
+
+    
+<button class="float" data-toggle="modal" data-target="#tvChannelSearchModal">
+    <i class="fa fa-search my-float"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="tvChannelSearchModal" tabindex="-1" role="dialog" aria-labelledby="tvChannelSearchModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tvChannelSearchModal">Tv channels</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form class="search-box" method="GET">
+                <div class="input-group rounded">
+                    <input name="search-channel" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                    
+                    <button type="submit" class="btn btn-primary"> <i class="fa fa-search"> </i></button>
+                </div>
+            </form>
+        </div>
+        <!-- <div class="modal-footer">
+         
+        </div> -->
+      </div>
+    </div>
+</div>
+
+
+
+
+</section>
 
 {% endblock %}

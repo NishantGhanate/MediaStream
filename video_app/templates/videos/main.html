@@ -1,24 +1,44 @@
 {% extends "base.html" %}
 
-{% block title %} Videos  {% endblock%}
+{% block title %} Video  {% endblock%}
 
-{% block navbar %}
-<li class="nav-item">
-    <form class="search-box" method="GET">
-        <input class="search-input" type="text" name="search-title" placeholder=" search ">
-        <button class="search-button" href="" type="submit">
-            <i class="material-icons">search</i>
-        </button>
-    </form>
-</li>
-{% endblock %}
 
 {% block content %}
-
+<section class="section colored">
+    
     {% if videos %}
         {% include "videos/videos_list_page.html" %}
     {% else %}
         {% include "error/error.html" %}
     {% endif %}
 
+        
+<button class="float" data-toggle="modal" data-target="#videoSearchModel">
+    <i class="fa fa-search my-float"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="videoSearchModel" tabindex="-1" role="dialog" aria-labelledby="videoSearchModel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="videoSearchModel">Video</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form class="search-box" method="GET">
+                <div class="input-group rounded">
+                    <input name="search-title" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                    <button type="submit" class="btn btn-primary"> <i class="fa fa-search"> </i></button>
+                </div>
+            </form>
+        </div>
+        
+      </div>
+    </div>
+</div>
+
+</section>
 {% endblock %}

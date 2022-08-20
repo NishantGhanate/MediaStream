@@ -1,36 +1,56 @@
-from django.forms import ModelForm, FileInput
+from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from captcha.fields import CaptchaField, CaptchaTextInput
 
-from video_app.models import (
-    CustomUser, LanguageModel, VideoModel
-)
+from video_app import models
 
 class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
-        model = CustomUser
+        model = models.CustomUser
         fields = ('email',)
 
 
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
-        model = CustomUser
+        model = models.CustomUser
         fields = ('email',)
 
-class LanguageForm(ModelForm):
+class LanguageForm(forms.ModelForm):
     
     class Meta: 
-        model = LanguageModel
+        model = models.LanguageModel
         fields = '__all__'
 
-class VideoForm(ModelForm):
+class VideoForm(forms.ModelForm):
     
     # validators=[validate_even]
 
     class Meta: 
-        model = VideoModel
+        model = models.VideoModel
         fields = '__all__'
         # widgets = {
-        #     'video_file_path': FileInput(attrs={'accept':'.mp4'})
+        #     'video_file_path': forms.FileInput(attrs={'accept':'.mp4'})
         # }
+
+class ContactUsForm(forms.ModelForm):
+    full_name = forms.CharField(label='Full name', max_length=50,
+            widget=forms.TextInput(attrs={'placeholder': 'Full Name'})
+        )
+    mobile_no = forms.CharField(label='Mobile No', max_length=15,
+            widget=forms.TextInput(attrs={'placeholder': 'Mobile No'})
+        )
+    email = forms.EmailField(label='Email-address', max_length=75,
+            widget=forms.TextInput(attrs={'placeholder': 'E-mail address'})
+        )
+    message = forms.CharField(max_length=500, widget=forms.Textarea(
+            attrs={'placeholder': 'Your message'})
+        )
+    captcha = CaptchaField(label='Please enter the characters in the image',
+            widget=CaptchaTextInput(attrs={'placeholder': 'CAPTCHA !'})
+        )
+
+    class Meta: 
+        model = models.ContactUsModel
+        fields = '__all__'
