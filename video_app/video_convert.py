@@ -71,9 +71,9 @@ def monitor(ffmpeg, duration, time_, time_left, process):
 
 def mp4_hls(file_path):
     """
-    Takes two params for video model instance
+    Convert the given mp4 to hls
+
     @params:
-        id - int
         file_path - str 
     
     @rtype :
@@ -83,7 +83,7 @@ def mp4_hls(file_path):
     meta_data = {}
     try :
         vc_logger.info('Starting m3u8 file conversion for : {}'.format(file_path))
-        save_path = file_path.rsplit(os.sep, 1)
+        file_name = file_path.rsplit(os.sep, 1)
        
         ffprobe = FFProbe(file_path) 
         video_format = ffprobe.format()
@@ -97,6 +97,7 @@ def mp4_hls(file_path):
             first_video.get('height', "-")
         )
         file_size = round(int(video_format.get('size', 0)) / 1024)
+        # TODO : add auto fie size formatter 
         file_size = '{}k'.format(file_size)
         duration = datetime.timedelta(
             seconds=float(video_format.get('duration', 0))
@@ -108,28 +109,32 @@ def mp4_hls(file_path):
             'display_aspect_ratio' : first_video.get('display_aspect_ratio', '-'),
             'overall_bit_rate' : round(int(video_format.get('bit_rate', 0)) / 1024),
             'video_bitrate' : round(int(first_video.get('bit_rate', 0)) / 1024),
-            'auido_bitrate' : round(int(first_audio.get('bit_rate', 0)) / 1024)   
+            'audio_bitrate' : round(int(first_audio.get('bit_rate', 0)) / 1024)   
         }
-        m3u8_name = save_path[1].rsplit('.', 1)[0]
-        m3u8_name = '{}_hls.m3u8'.format(m3u8_name)
-        m3u8_path = os.path.join(save_path[0], m3u8_name)
+
+        # Remove file extension 
+        m3u8_name = file_name[1].rsplit('.', 1)[0]
+        m3u8_name = f'{m3u8_name}_hls.m3u8'
+
+        # Create new file path for it
+        m3u8_path = os.path.join(file_name[0], m3u8_name)
         video = ffmpeg_streaming.input(file_path)
         hls = video.hls(Formats.h264())
         hls.representations(_480p, _720p, _1080p)
         hls.output(m3u8_path, monitor= monitor)
         
+        # since we are storing in project/media on win it will be projects\\media
         converted_path = m3u8_path.split('media')[1]
         if '\\' in converted_path:
             converted_path = converted_path.replace('\\', '/')
 
-        meta_data['path'] = converted_path
+        meta_data['m3u8_file_path'] = converted_path
         
     except :
         vc_logger.error(traceback.format_exc())
         meta_data = {
             'error' : str(traceback.format_exc())
         }
-        
         
     return meta_data
     

@@ -6,7 +6,7 @@ class VideoProcessFailed(Exception):
         message -- explanation of the error
     """
 
-    def __init__(self, file_name, message="Failed to process file "):
+    def __init__(self, file_name, message="Failed to process file"):
         self.file_name = file_name
         self.message = message
         super().__init__(self.message)

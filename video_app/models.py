@@ -17,6 +17,7 @@ from video_app.managers import CustomUserManager, GetOrNoneManager
 logger = logging.getLogger('video_app')
 # validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
 # 
+
 def USER_DIRECTORY_PATH(instance, file_name):
     try:
         if instance.category and instance.language:

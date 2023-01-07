@@ -1,5 +1,9 @@
+import os
+import shutil
+import pathlib
 import logging
 import celery
+
 from datetime import datetime
 from celery import shared_task
 # from django_celery_results.models import TaskResult
@@ -13,7 +17,7 @@ from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
-
+PROCESSED_PATH = pathlib.Path(settings.BASE_DIR, 'processed') 
 
 vc_logger = logging.getLogger('video_convert')
 
@@ -60,19 +64,21 @@ class VideoConverTask(celery.Task):
         # TaskResult.objects.filter(task_id=task_id).update(traceback = '')
 
     def on_success(self, retval, task_id, args, kwargs):
-        vc_logger.info('success : {}'.format(kwargs['file_path']))
-
-        print(kwargs['id'], kwargs['file_path'])
+        vc_logger.info(f"success : {kwargs['id']} - {kwargs['file_path']}")
+        # move media file 
+        file_name =  kwargs['file_path'].rsplit(os.sep, 1)[1]
+        new_path = os.path.join(PROCESSED_PATH, file_name)
+        shutil.move(src= kwargs['file_path'], dst= new_path)
+        
 
 @shared_task(base= VideoConverTask)
 def convert_task(id, file_path):
-    vc_logger.info('video id = {}, Task received - {}'.format(id, file_path))
+    vc_logger.info(f'video id = {id}, Task received - {file_path}')
     # Before process call 
     before = datetime.now()
     result = mp4_hls(file_path= file_path)
     time_took = str(datetime.now() - before)
-   
-    vc_logger.info('result = {}'.format(result))
+    vc_logger.info(f'result = {result}')
     
     if 'error' in result:
         VideoModel.objects.filter(pk=id).update(
@@ -85,13 +91,7 @@ def convert_task(id, file_path):
     VideoModel.objects.filter(pk=id).update(
         processing_status = Status.FINISHED,
         processing_completed = time_took,
-        m3u8_file_path = result['path'],
-        duration = result['duration'],
-        file_size = result['file_size'],
-        dimension = result['dimension'],
-        display_aspect_ratio = result['display_aspect_ratio'],
-        overall_bit_rate = result['overall_bit_rate'],
-        video_bitrate = result['video_bitrate'],
-        audio_bitrate = result['auido_bitrate'],
+        **result
     )
+
     return result

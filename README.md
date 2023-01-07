@@ -12,7 +12,7 @@ A django web application to stream video content using .m3u8
 - python3.10 get-pip.py
 - sudo apt-get install python3.10-distutils
 - python3.10 -m pip --version
-- python3.10 -m pip install virualenv
+- python3.10 -m pip install virtualenv
 - python3.10 -m virtualenv venv
 - pip --version
 - apt-get -y install libz-dev libjpeg-dev libfreetype6-dev python-dev
@@ -30,6 +30,7 @@ A django web application to stream video content using .m3u8
 - git clone https://github.com/NishantGhanate/MediaStream.git
 - cd MediaStream
 - python3.10 -m virtualenv venv
+- source venv/bin/activate
 - pip install -r requirements.txt 
 ```
 
@@ -101,8 +102,9 @@ OR
 
 ### Install Redis
 ```
-- sudo apt-get install redis
+- sudo service redis-server start
 - redis-server start
+- PING
 
 Open another wsl2 terminal 
 
@@ -152,7 +154,7 @@ Password: guest
 ```
 <hr>
 
-###  Run Celery 
+###  Run Celery : sh start_celery.sh
 ```
 celery --app media_stream worker -l info --pool=solo
 

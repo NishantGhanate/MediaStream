@@ -1,5 +1,3 @@
-git config --global core.autocrlf true
-
 
 ### Gunicron
 ```
@@ -86,3 +84,21 @@ sudo service nginx start
 
 sudo service gunicorn.socket start 
 ```
+
+
+### GIT 
+```
+Since we are working on wsl to keep git same across we will use autocrlf true 
+in windows & wsl as well .
+
+1. See existing mode 
+> git config --get core.autocrlf
+
+2 Set autocrlf true in gitbash & wsl terminal
+> git config --global core.autocrlf true
+
+```
+
+### TEST SMALL VIDEOS
+
+- https://pixabay.com/videos/search/small/
