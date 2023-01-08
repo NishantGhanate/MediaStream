@@ -40,7 +40,6 @@ class ContactUsView(View):
         return render(request, self.template_name, context= context)
 
 
-
 class VideoListView(View):
     template_name = 'videos/main.html'
     page_size = 12
@@ -68,7 +67,7 @@ class VideoListView(View):
         if videos:
             context['videos'] = videos
         elif search_title:
-            context['error_message'] = f'Sorry could not find {search_title}'
+            context['message'] = f'Sorry could not find {search_title}'
         return render(request, self.template_name, context= context)
 
 class VideoDetailViiew(View):
@@ -79,11 +78,13 @@ class VideoDetailViiew(View):
         try:
             video = VideoModel.filter_cache(
                 title_slug = kwargs['video_title']
-                ).first()
+            ).first()
             
         except :
             va_logger.error(traceback.format_exc())
-            # TODO : renders ops page
+            return render(request, self.template_name, context= {
+                'message' : 'Ops something went wrong !'
+            })
         
         return render(request, self.template_name, context= {
             'video' : video

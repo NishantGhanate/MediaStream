@@ -56,7 +56,6 @@ def factorial(n):
     cache.set(key_check, fact, timeout=CACHE_TTL)   
     return message.format(n= n, fact= fact)
 
-
 class VideoConverTask(celery.Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):

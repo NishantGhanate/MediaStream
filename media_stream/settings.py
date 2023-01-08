@@ -28,6 +28,7 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
+GOOGLE_FORM_URL = config('GOOGLE_FORM_URL')
 
 # Application definition
 

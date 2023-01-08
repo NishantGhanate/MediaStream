@@ -30,9 +30,9 @@ class VideoForm(forms.ModelForm):
     class Meta: 
         model = models.VideoModel
         fields = '__all__'
-        # widgets = {
-        #     'video_file_path': forms.FileInput(attrs={'accept':'.mp4'})
-        # }
+        widgets = {
+            'video_file_path': forms.FileInput(attrs={'accept':'.mp4'})
+        }
 
 class ContactUsForm(forms.ModelForm):
     full_name = forms.CharField(label='Full name', max_length=50,

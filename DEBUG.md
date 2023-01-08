@@ -1,15 +1,18 @@
 
 ### Gunicron
 ```
-gunicorn --bind :8000 --workers 3 media_stream.wsgi --capture-output
+1. Default Run
+> gunicorn --bind :8000 --workers 3 media_stream.wsgi --capture-output
 
-gunicorn --bind :8000 --workers 1  media_stream.wsgi \
+2. extra keywords
+> gunicorn --bind :8000 --workers 3  media_stream.wsgi \
 --log-level=DEBUG \
 --timeout=0 \
 --access-logfile=-\
 --log-file=-
 
-gunicorn media_stream.wsgi  -c gunicorn.conf.py
+3. Run from config file
+> gunicorn media_stream.wsgi  -c gunicorn.conf.py
 ```
 
 ### Dump & Load Model data
@@ -33,8 +36,6 @@ WHERE id= 37;
 
 ### ffmeg - fprobe
 > sudo apt install ffmpeg
-
-
 
 > sudo apt install nginx 
 
