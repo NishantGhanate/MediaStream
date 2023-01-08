@@ -28,6 +28,7 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
+GOOGLE_FORM_URL = config('GOOGLE_FORM_URL')
 
 # Application definition
 
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
+    'captcha',
     'video_app'
 ]
 
@@ -123,7 +125,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
@@ -144,8 +146,8 @@ AUTH_USER_MODEL = 'video_app.CustomUser'
 # # CELERY SETTING
 CELERY_TASK_TRACK_STARTED = True
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')
-CELERY_TIMEZONE = 'Asia/Kolkata'
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_TIMEZONE = config('TIME_ZONE')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
 CELERY_CACHE_BACKEND = 'default'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'

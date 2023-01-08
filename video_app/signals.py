@@ -4,25 +4,21 @@ import logging
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.cache import cache
+from django.core.management import call_command
 
 from video_app.models import TvChannelModel, VideoModel
 from video_app.tasks import convert_task
 
 va_logger = logging.getLogger('video_app')
 
+
+
 @receiver(post_save, sender= VideoModel)
 def on_video_save(sender, instance, **kwargs):
-
-    if VideoModel.CACHE_KEY in cache:
-        cache.delete(VideoModel.CACHE_KEY)
-    
-    keys = cache.keys("*FILTER*")
-    if keys:
-        cache.delete_many(keys)
-
     va_logger.info('Video file saved - {}'.format(
         instance.video_file_path
     ))
+    call_command("clear_cache", model= ("VideoModel", ))
     convert_task.delay(
         id= instance.id,
         file_path= instance.video_file_path.path
@@ -30,10 +26,9 @@ def on_video_save(sender, instance, **kwargs):
     
 @receiver(post_delete, sender=VideoModel)
 def delete_media(sender, instance, **kwargs):
-    
-    if VideoModel.CACHE_KEY in cache:
-        cache.delete(VideoModel.CACHE_KEY)
 
+    call_command("clear_cache", model= ("VideoModel", ))
+    
     if (instance.video_file_path and 
         os.path.isfile(instance.video_file_path.path)):
         try :
@@ -51,12 +46,9 @@ def delete_media(sender, instance, **kwargs):
 
 @receiver(post_save, sender= TvChannelModel)
 def on_tvchannel_save(sender, instance, **kwargs):
+    call_command("clear_cache", model= ("TvChannelModel", ))
 
-    if TvChannelModel.CACHE_KEY in cache:
-        cache.delete(TvChannelModel.CACHE_KEY)
-    
-    # keys = cache.keys("*FILTER*")
-    # if keys:
-    #     cache.delete_many(keys)
-
+@receiver(post_delete, sender= TvChannelModel)
+def on_tvchannel_delete(sender, instance, **kwargs):
+    call_command("clear_cache", model= ("TvChannelModel", ))
     

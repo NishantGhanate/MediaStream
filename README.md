@@ -3,7 +3,14 @@
 A django web application to stream video content using .m3u8 
 
 
-# Python setup 
+### System Requirements
+```
+- Python 3.10
+- Postgres Sql 14
+- Ubuntu 20.04 WSL 1 on Windows 11
+```
+
+### 1. Python setup 
 ```
 - sudo add-apt-repository ppa:deadsnakes/ppa
 - sudo apt install python3.10
@@ -12,23 +19,19 @@ A django web application to stream video content using .m3u8
 - python3.10 get-pip.py
 - sudo apt-get install python3.10-distutils
 - python3.10 -m pip --version
-- python3.10 -m pip install virualenv
+- python3.10 -m pip install virtualenv
 - python3.10 -m virtualenv venv
 - pip --version
+- apt-get -y install libz-dev libjpeg-dev libfreetype6-dev python-dev
 ```
 
-### 1. System Requirements
-```
-- Python 3.10
-- Postgres Sql 14
-- Ubuntu 20.04 WSL 1 on Windows 11
-```
 
 ### 2. Project Setup 
 ```
 - git clone https://github.com/NishantGhanate/MediaStream.git
 - cd MediaStream
 - python3.10 -m virtualenv venv
+- source venv/bin/activate
 - pip install -r requirements.txt 
 ```
 
@@ -79,38 +82,54 @@ CACHE_LOCATION = redis://localhost:6379/0
 
 <hr>
 
-## Celery Setup 
+## 6. Celery Setup 
 
 In order to use celery we need to setup 
 
+Option 1 : 6.1 & 6.2
 - Redis
 
 OR 
 
+OPtion 2 :
 - Erlang
 - RabbitMQ on windows 
 
 <br>
 
-### Redis Requirements
+### 6.1 Redis & Celery Setup
+```
+Open another wsl terminal 
+- sudo apt-get install redis
+- sudo service redis-server start
+- redis-cli 
+- PING
+
+EXtra : Redis GUI 
 
 - Redis on wsl 2
 - redisInsight-v2 [https://redis.com/redis-enterprise/redis-insight/#insight-form]
 
-
-### Install Redis
 ```
-- sudo apt-get install redis
-- redis-server start
 
-Open another wsl2 terminal 
 
-- redis-cli 
+### 6.2 Run Celery : sh start_celery.sh
 ```
+celery --app media_stream worker -l info --pool=solo
+
+<syntax> 
+celery --app <project_name> worker -l info --pool=solo
+celery -A media_stream worker -l INFO
+celery -A media_stream worker -l info -Q celery, high
+celery -A media_stream worker -l INFO -Q celery,high  --pool=solo
+
+```
+Note : Make to sure to run migration if you have installed celery later
+
 
 <hr>
 
-### Rabbit MQ
+### 6.3 Rabbit MQ
 Using Chocolatey (power shell on admin mode):
 > choco install rabbitmq
 
@@ -119,7 +138,7 @@ OR
 Install mannually 
 
 
-### 1. Erlang : https://www.erlang.org/downloads
+### 6.3.1 Erlang : https://www.erlang.org/downloads
 ```
 - First install erlang & add to path 
 
@@ -137,7 +156,7 @@ Note: Don't include bin on above step.
     Variable value: %ERLANG_HOME%\bin
 ```
 
-### 2. RabbitMQ : https://www.rabbitmq.com/install-windows.html
+### 6.3.2 RabbitMQ : https://www.rabbitmq.com/install-windows.html
 ```
 > D:\Program Files\RabbitMQ Server\rabbitmq_server-3.10.5\sbin>
 > rabbitmqctl.bat status
@@ -151,20 +170,13 @@ Password: guest
 ```
 <hr>
 
-###  Run Celery 
+### 7. Celery Flower : To visualize tasks status
 ```
-celery --app media_stream worker -l info --pool=solo
 
-<syntax> 
-celery --app <project_name> worker -l info --pool=solo
-celery -A media_stream worker -l INFO
-celery -A media_stream worker -l info -Q celery, high
-celery -A media_stream worker -l INFO -Q celery,high  --pool=solo
+This is the template to follow:
 
-```
-Note : Make to sure to run migration if you have installed celery later
+> celery [celery args] flower [flower args]
 
-### Celery Flower
-```
-celery -A media_stream flower --port=5566
+> celery -A media_stream flower --port=5566
+
 ```

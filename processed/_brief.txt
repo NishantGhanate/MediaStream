@@ -1,0 +1,2 @@
+This folder will contain processed media i.e after coverting .mp4 to hls it will
+move the .mp4 from media folder to processed

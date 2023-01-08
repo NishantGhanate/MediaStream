@@ -2,15 +2,17 @@
 
 {% block content %}
 
-<div class="center">
-    <video-js id="video-player" class="vjs-default-skin" controls 
-    poster="{{MEDIA_URL}}{{channel.thumbnail}}" >
-    <source
-       src="{{channel.m3u8_url}}" 
-       type="application/x-mpegURL">
-    </video-js>
+<section class="section colored">
+    <div class="video-player">
+        <video-js id="video-player" class="vjs-default-skin" controls 
+        poster="{{MEDIA_URL}}{{channel.thumbnail}}" >
+        <source
+           src="{{channel.m3u8_url}}" 
+           type="application/x-mpegURL">
+        </video-js>
+    </div>
+</section>
 
-</div>
 
 <script>
     var player = videojs('video-player');

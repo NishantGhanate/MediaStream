@@ -1,17 +1,18 @@
-git config --global core.autocrlf true
-
 
 ### Gunicron
 ```
-gunicorn --bind :8000 --workers 3 media_stream.wsgi --capture-output
+1. Default Run
+> gunicorn --bind :8000 --workers 3 media_stream.wsgi --capture-output
 
-gunicorn --bind :8000 --workers 1  media_stream.wsgi \
+2. extra keywords
+> gunicorn --bind :8000 --workers 3  media_stream.wsgi \
 --log-level=DEBUG \
 --timeout=0 \
 --access-logfile=-\
 --log-file=-
 
-gunicorn media_stream.wsgi  -c gunicorn.conf.py
+3. Run from config file
+> gunicorn media_stream.wsgi  -c gunicorn.conf.py
 ```
 
 ### Dump & Load Model data
@@ -35,8 +36,6 @@ WHERE id= 37;
 
 ### ffmeg - fprobe
 > sudo apt install ffmpeg
-
-
 
 > sudo apt install nginx 
 
@@ -86,3 +85,21 @@ sudo service nginx start
 
 sudo service gunicorn.socket start 
 ```
+
+
+### GIT 
+```
+Since we are working on wsl to keep git same across we will use autocrlf true 
+in windows & wsl as well .
+
+1. See existing mode 
+> git config --get core.autocrlf
+
+2 Set autocrlf true in gitbash & wsl terminal
+> git config --global core.autocrlf true
+
+```
+
+### TEST SMALL VIDEOS
+
+- https://pixabay.com/videos/search/small/

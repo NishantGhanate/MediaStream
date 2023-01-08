@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Home {% endblock%}
+
+
+{% block content %}
+
+<!-- ***** Welcome Area Start ***** -->
+<div class="welcome-area" id="welcome">
+
+    <!-- ***** Header Text Start ***** -->
+    <div class="header-text">
+        <div class="container">
+            <div class="row">
+                <div class="offset-xl-3 col-xl-6 offset-lg-2 col-lg-8 col-md-12 col-sm-12">
+                    <h1>We provide the best <strong>Wifi</strong><br>to meet your <strong>internet usage</strong></h1>
+                    <p>Ktv network is in this industry from past <strong>25-years</strong>. <br>
+                    It has evolved with time to provide the best service</p>
+                    <a href="#features" class="main-button-slider">Discover More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Header Text End ***** -->
+</div>
+<!-- ***** Welcome Area End ***** -->
+
+
+    <!-- ***** Features Small Start ***** -->
+    <section class="section home-feature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <!-- ***** Features Small Item Start ***** -->
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.2s">
+                            <div class="features-small-item">
+                                <div class="icon">
+                                    <i><img src="{% static 'images/infinity.png' %}" alt=""></i>
+                                </div>
+                                <h5 class="features-title">Truly Unlimited</h5>
+                                <p>We provide truly unlimted wifi and we use latest tech to meet your demands</p>
+                            </div>
+                        </div>
+                        <!-- ***** Features Small Item End ***** -->
+
+                        <!-- ***** Features Small Item Start ***** -->
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.4s">
+                            <div class="features-small-item">
+                                <div class="icon">
+                                    <i><img src="{% static 'images/rupee.png' %}" alt="Infinity"></i>
+                                </div>
+                                <h5 class="features-title">Best Price</h5>
+                                <p>The Best price for the wifi with optical fibre support</p>
+                            </div>
+                        </div>
+                        <!-- ***** Features Small Item End ***** -->
+
+                        <!-- ***** Features Small Item Start ***** -->
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.6s">
+                            <div class="features-small-item">
+                                <div class="icon">
+                                    <i><img src="{% static 'images/media001.png' %}" alt="Rupee"></i>
+                                </div>
+                                <h5 class="features-title">Free Content</h5>
+                                <p>By connecting to our network now you can browse content on our webiste</p>
+                            </div>
+                        </div>
+                        <!-- ***** Features Small Item End ***** -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Features Small End ***** -->
+
+    
+    <!-- ***** Features Big Item Start ***** -->
+    <section class="section padding-top-70 padding-bottom-0" id="features">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-md-12 col-sm-12 align-self-center" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
+                    <img src="{% static 'images/left-image.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
+                </div> 
+                <div class="col-lg-1"></div>
+                <div class="col-lg-6 col-md-12 col-sm-12 align-self-center mobile-top-fix">
+                    <div class="left-heading">
+                        <h2 class="section-title">Let’s discuss about which wifi-plan suits best your use case</h2>
+                    </div>
+                    <div class="left-text">
+                        <p>Finding right internet plan helps you stay efficient in your task and achieve your goals.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="hr"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ***** Home Parallax Start ***** -->
+    <section class="mini" id="work-process">
+        <div class="mini-content">
+            <div class="container">
+                <div class="row">
+                    <div class="offset-lg-3 col-lg-6">
+                        <div class="info">
+                            <h1>New Connection Process</h1>
+                            <p>Our process is quite simple, we have divided into 3 easy steps.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ***** Mini Box Start ***** ***** -->
+                <div class="row g-2 pt-2">
+                    
+                    <div class="col-lg-4 col-md-5 col-sm-6 col-6">
+                        <a href="#" class="mini-box">
+                            <i><img src="{% static 'images/testimonial-icon.png' %}" alt="testimonial-icon"></i>
+                            <strong>Step 1</strong>
+                            <span>Select Internet plan which is best for you & fill in new connection application</span>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-md-3 col-sm-6 col-6">
+                        <a href="#" class="mini-box">
+                            <i><img src="{% static 'images/connect.png' %}" alt="connect.png"></i>
+                            <strong>Step 2</strong>
+                            <span>Our Engineers will setup the connection from nearest hub</span>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-md-3 col-sm-6 col-6">
+                        <a href="#" class="mini-box">
+                            <i><img src="{% static 'images/work-process-item-01.png' %}" alt="work-process-item"></i>
+                            <strong>Step 3</strong>
+                            <span>Activate the router new user credetials and start browsing</span>
+                        </a>
+                    </div>
+                
+                    
+                </div>
+
+                <!-- ***** Mini Box End ***** -->
+            </div>
+        </div>
+    </section>
+    <!-- ***** Home Parallax End ***** -->
+
+{% endblock %}

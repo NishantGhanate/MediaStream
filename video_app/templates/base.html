@@ -5,16 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/ktv.ico' %}"/>
 
-
-    <!-- bootstrap -->
+    <!-- css -->
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/card.css' %}">
     <link rel="stylesheet" href="{% static 'css/pagination.css' %}">
-
-
-   
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/templatemo-softy-pinko.css' %}">
 
     <!-- video player -->
     <link href="{% static 'css/videos-js.min.css' %}" rel="stylesheet">
@@ -25,41 +24,85 @@
 	<link rel='stylesheet prefetch' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
 	<style class="cp-pen-styles">@import url("https://fonts.googleapis.com/css?family=Arimo:400,700");</style>
 
-
     <title>{% block title %} Video app home {% endblock%}</title>
 </head>
 <body>
-    <header class="header">
-        <nav class="navbar">
-            <a href="/" class="nav-logo">Oneiro</a>
-            <ul class="nav-menu">
-                {% block navbar %}
-
-                {% endblock %}
-                <li class="nav-item">
-                    <a href="/" class="nav-link">Video</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/tv" class="nav-link">Tv Channels</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Contact</a>
-                </li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+        
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="/" class="logo">
+                            <img src="{% static 'images/ktv-logo-3.png' %}" alt="Ktv network"/>
+                        </a>
+                        <!-- ***** Logo End ***** -->
+                        
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            
+                            <li><a href="/" class="active">Home</a></li>
+                            <li><a href="https://google.com">Wifi form</a></li>
+                            <li><a href="/contact-us">Contact Us</a></li>
+                            
+                            <li><a href="/tv">Free Tv</a></li>
+                            <li><a href="/video">Video</a></li>
+                        </ul>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
+                </div>
             </div>
-        </nav>
+        </div>
     </header>
 
 {% block content %}
 
 {% endblock %}
-<script src="{% static 'js/main.js' %}"></script> 
+    <!-- ***** Footer Start ***** -->
+    <footer class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <ul class="social">
+                        <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                        <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                        <li>
+                            <a href="https://api.whatsapp.com/send?phone=+9191378724787">
+                                <i class="fa fa-whatsapp" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="copyright">Copyright &copy; 2022 Ktv Network</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+ 
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery-2.1.0.min.js'  %}"></script>
+    
+    <!-- Bootstrap -->
+    <script src="{% static 'js/popper.js'  %}"></script>
+    <script src="{% static 'js/bootstrap.min.js'  %}"></script>
+
+    <!-- Plugins -->
+    <script src="{% static 'js/scrollreveal.min.js'  %}"></script>
+    <script src="{% static 'js/waypoints.min.js'  %}"></script>
+    <script src="{% static 'js/jquery.counterup.min.js'  %}"></script>
+    <script src="{% static 'js/imgfix.min.js' %}"></script> 
+
+    <!-- Global Init -->
+    <script src="{% static 'js/custom.js'  %}"></script>
+
 </body>
 </html>

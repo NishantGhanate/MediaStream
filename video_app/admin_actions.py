@@ -7,6 +7,9 @@ from django.utils.safestring import mark_safe
 
 
 def retry_celery_task_admin_action(modeladmin, request, queryset):
+    """
+    To retry failed celery job ,
+    """
     msg = ''
     for task_res in queryset:
         if task_res.status != 'FAILURE':

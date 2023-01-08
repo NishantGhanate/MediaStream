@@ -45,7 +45,7 @@ class Command(BaseCommand):
                 ))
                 cache.delete_many(keys)
                 self.stdout.write(
-                    self.style.SUCCESS(f'Cache cleared !')
+                    self.style.SUCCESS(f'Cache cleared for {cache_key}!')
                 )
             else:
                 self.stdout.write(

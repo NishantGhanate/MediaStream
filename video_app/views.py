@@ -1,16 +1,46 @@
 import logging
 import traceback
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.db.models import Q
-
+from video_app.forms import ContactUsForm
 from video_app.models import Status, VideoModel, TvChannelModel
+from django.urls import reverse
 
 va_logger = logging.getLogger('video_app')
 
-
 class HomeView(View):
+    template_name = 'home.html'
+    
+    def get(self, request, *args, **kwargs):
+        context = {}
+        return render(request, self.template_name, context= context)
+
+class ContactUsView(View):
+    template_name = 'contact.html'
+    
+    def get(self, request, *args, **kwargs):
+        form = ContactUsForm(None)
+        context = {
+            'form' : form
+        }
+        return render(request, self.template_name, context= context)
+
+    def post(self, request, *args, **kwargs):
+        contact_us = ContactUsForm(request.POST)
+        context = {}
+        if contact_us.is_valid():
+            context['form'] = ContactUsForm(None)
+            context['success'] = True
+            context['message'] = 'Thank you contacting us'
+            contact_us.save()
+        else:
+            context['form'] = contact_us
+        return render(request, self.template_name, context= context)
+
+
+class VideoListView(View):
     template_name = 'videos/main.html'
     page_size = 12
 
@@ -25,7 +55,7 @@ class HomeView(View):
         else:
             videos = VideoModel.filter_cache(processing_status= Status.FINISHED)
         
-        paginator = Paginator(videos, HomeView.page_size)
+        paginator = Paginator(videos, VideoListView.page_size)
         page = request.GET.get('page', 1)
         try:
             videos = paginator.page(page)
@@ -37,10 +67,10 @@ class HomeView(View):
         if videos:
             context['videos'] = videos
         elif search_title:
-            context['error_message'] = f'Sorry could not find {search_title}'
+            context['message'] = f'Sorry could not find {search_title}'
         return render(request, self.template_name, context= context)
 
-class WatchVideoView(View):
+class VideoDetailViiew(View):
     template_name = 'videos/watch_video.html'
 
     def get(self, request, *args, **kwargs):
@@ -48,17 +78,19 @@ class WatchVideoView(View):
         try:
             video = VideoModel.filter_cache(
                 title_slug = kwargs['video_title']
-                ).first()
+            ).first()
             
         except :
             va_logger.error(traceback.format_exc())
-            # TODO : renders ops page
+            return render(request, self.template_name, context= {
+                'message' : 'Ops something went wrong !'
+            })
         
         return render(request, self.template_name, context= {
             'video' : video
         })
 
-class TvView(View):
+class TvListView(View):
     template_name = 'tv/main.html'
     page_size = 12
 
@@ -73,7 +105,7 @@ class TvView(View):
         else:
             channels = TvChannelModel.cache_all()
         
-        paginator = Paginator(channels, HomeView.page_size)
+        paginator = Paginator(channels, TvListView.page_size)
         page = request.GET.get('page', 1)
         try:
             channels = paginator.page(page)
@@ -88,7 +120,7 @@ class TvView(View):
             context['error_message'] = f'Sorry could not find {search_channel}'
         return render(request, self.template_name, context= context)
 
-class ChannelView(View):
+class TvDetailView(View):
     template_name = 'tv/watch_channel.html'
 
     def get(self, request, *args, **kwargs):

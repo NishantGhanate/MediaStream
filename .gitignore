@@ -9,3 +9,6 @@ venv/
 media/
 data_backup/
 staticfiles/
+static/
+
+processed/*.mp4
