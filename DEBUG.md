@@ -1,19 +1,6 @@
 
-### Gunicron
-```
-1. Default Run
-> gunicorn --bind :8000 --workers 3 media_stream.wsgi --capture-output
-
-2. extra keywords
-> gunicorn --bind :8000 --workers 3  media_stream.wsgi \
---log-level=DEBUG \
---timeout=0 \
---access-logfile=-\
---log-file=-
-
-3. Run from config file
-> gunicorn media_stream.wsgi  -c gunicorn.conf.py
-```
+## NOTE : 
+using windows to host server from wsl make sure IISM is not using same port
 
 ### Dump & Load Model data
 ```
@@ -34,42 +21,7 @@ WHERE id= 37;
 
 ```
 
-### ffmeg - fprobe
-> sudo apt install ffmpeg
 
-> sudo apt install nginx 
-
-> sudo nano /etc/systemd/system/gunicorn.socket
-```
-[Unit]
-Description=gunicorn socket
-
-[Socket]
-ListenStream=/run/gunicorn.sock
-
-[Install]
-WantedBy=sockets.target
-```
-
-> sudo nano /etc/systemd/system/gunicorn.service
-```
-[Unit]
-Description=gunicorn daemon
-Requires=gunicorn.socket
-After=network.target
-
-[Service]
-User=sammy
-Group=www-data
-WorkingDirectory=/mnt/d/Github/MediaHls
-ExecStart=/mnt/d/Github/MediaHls/venv/bin/gunicorn \
-          --access-logfile - \
-          --workers 3 \
-          --bind unix:/run/gunicorn.sock \
-           media_stream.wsgi:application
-
-[Install]
-WantedBy=multi-user.target
 
 
 ps > wsl --shutdown
@@ -78,13 +30,7 @@ sudo systemctl enable gunicorn.socket
 
 sudo systemctl start gunicorn.socket
 
-
-sudo add-apt-repository ppa:nginx/stable
-sudo apt-get install -y nginx
-sudo service nginx start
-
 sudo service gunicorn.socket start 
-```
 
 
 ### GIT 
@@ -101,5 +47,57 @@ in windows & wsl as well .
 ```
 
 ### TEST SMALL VIDEOS
+```
 
 - https://pixabay.com/videos/search/small/
+
+- https://arctype.com/blog/install-django-ubuntu/
+
+```
+
+# 
+- https://raw.githubusercontent.com/nginx/nginx/master/conf/nginx.conf
+
+
+sudo nano /etc/nginx/conf.d/test.conf
+
+  server {
+    listen        8005;
+    server_name   localhost;
+    error_log     /mnt/d/Github/MediaHls/logs/nginx-error.log;
+  
+    location /static/  {
+      autoindex    on;
+      alias /mnt/d/Github/MediaHls/static/;
+    }
+
+}
+
+
+cd /var/log/nginx
+sudo  nginx -c /etc/nginx/conf.d/test.conf -t
+
+> sudo /etc/init.d/nginx start
+> sudo /etc/init.d/nginx configtest
+
+> sudo cp /etc/nginx/conf.d/test.conf /etc/nginx/sites-enabled/
+
+# backup config
+> sudo cp /etc/nginx/sites-enabled/default.conf /etc/nginx/conf.d/
+
+> cd /etc/nginx/sites-enabled/
+
+> sudo /etc/init.d/nginx restart
+
+- http://127.0.0.1:8005/static/static/images/banner-bg.png
+- 
+
+- cat /var/log/nginx/error.log
+
+> cd /var/www/html;
+> sudo nano index.nginx-debian.html
+
+
+https://stackoverflow.com/questions/41766195/nginx-emerg-server-directive-is-not-allowed-here
+
+- https://kifarunix.com/create-locally-trusted-ssl-certificates-with-mkcert-on-ubuntu-20-04/

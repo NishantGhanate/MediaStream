@@ -82,8 +82,8 @@ CACHE_LOCATION = redis://localhost:6379/0
 
 <hr>
 
-## 6. Celery Setup 
-
+## 6. Celery Setup
+```
 In order to use celery we need to setup 
 
 Option 1 : 6.1 & 6.2
@@ -94,8 +94,7 @@ OR
 OPtion 2 :
 - Erlang
 - RabbitMQ on windows 
-
-<br>
+```
 
 ### 6.1 Redis & Celery Setup
 ```
@@ -180,3 +179,91 @@ This is the template to follow:
 > celery -A media_stream flower --port=5566
 
 ```
+
+### 8. Install ffmeg & nginx
+> sudo apt install ffmpeg
+
+> sudo add-apt-repository ppa:nginx/stable
+
+> sudo apt-get install -y nginx
+`
+
+### Gunicron Django server 
+```
+1. Default Run
+> python manage.py collectstatic
+> gunicorn media_stream.wsgi  -c gunicorn.conf.py
+
+2. Cli Run
+> sudo -s
+> gunicorn --bind :8000 --workers 3 media_stream.wsgi --capture-output
+
+3. Extra keywords
+> gunicorn --bind :8000 --workers 3  media_stream.wsgi \
+--log-level=DEBUG \
+--timeout=0 \
+--access-logfile=-\
+--log-file=-
+
+```
+
+### 9. Production setup :
+
+1. Create guicorn socket config
+> sudo nano /etc/systemd/system/media_stream_gunicorn.socket
+```
+[Unit]
+Description=media stream gunicorn socket connection
+
+[Socket]
+ListenStream=/run/media_stream_gunicorn.sock
+
+[Install]
+WantedBy=sockets.target
+```
+
+2. Create guincorn socket service
+> sudo nano /etc/systemd/system/media_stream_gunicorn.service
+```
+Group=www-data
+WorkingDirectory=/mnt/d/Github/MediaHls
+ExecStart=/mnt/d/Github/MediaHls/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/media_stream_gunicorn.sock \
+           media_stream.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+```
+2. Start guicorn 
+> sudo service media_stream_gunicorn.socket start
+> sudo service media_stream_gunicorn.socket enable
+> sudo media_stream_gunicorn.socket status
+
+3. Set permission
+> sudo chown -R www-data:root /mnt/d/Github/MediaHls
+
+4. Restart wsl using powershell in admin mode
+> wsl --shutdown
+
+5. Create nginx config
+> sudo nano /etc/nginx/conf.d/media_stream.conf
+
+```
+copy contentsfrom project/ngix/media_stream
+```
+
+6. Copy to site-enabled
+> sudo cp /etc/nginx/conf.d/media_stream.conf /etc/nginx/sites-enabled/
+
+7. Test nginx configsu
+> sudo nginx -t
+
+> sudo /etc/init.d/nginx start
+
+> sudo /etc/init.d/nginx reload
+
+> sudo /etc/init.d/nginx restart
+
+> sudo /etc/init.d/nginx status

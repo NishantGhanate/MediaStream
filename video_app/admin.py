@@ -3,20 +3,15 @@ from django.contrib.auth.admin import UserAdmin
 from django_celery_results.admin import TaskResultAdmin
 from django_celery_results.models import TaskResult
 
-from video_app.models import (
-    CustomUser, LanguageModel, CategoryModel, GenreModel,
-    VideoModel, TvChannelModel, ContactUsModel
-)
-from video_app.forms import (
-    CustomUserCreationForm, CustomUserChangeForm, LanguageForm,
-    VideoForm
-)
+from video_app import models
+from video_app import forms
+
 from .admin_actions import retry_celery_task_admin_action
 
 class CustomUserAdmin(UserAdmin):
-    add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
-    model = CustomUser
+    add_form = forms.CustomUserCreationForm
+    form = forms.CustomUserChangeForm
+    model = models.CustomUser
     list_display = ('email', 'is_staff', 'is_active',)
     list_filter = ('email', 'is_staff', 'is_active',)
     fieldsets = (
@@ -37,7 +32,15 @@ class CustomUserAdmin(UserAdmin):
 
 class LanguageAdmin(admin.ModelAdmin):
     readonly_fields = ('name_slug',)
-    form = LanguageForm
+    form = forms.LanguageForm
+
+class CategoryAdmin(admin.ModelAdmin):
+    readonly_fields = ('name_slug',)
+    form = forms.CategoryForm
+
+class GenreAdmin(admin.ModelAdmin):
+    readonly_fields = ('name_slug',)
+    form = forms.CategoryForm
 
 class VideoAdmin(admin.ModelAdmin):
     readonly_fields = (
@@ -47,7 +50,7 @@ class VideoAdmin(admin.ModelAdmin):
         'video_bitrate', 'audio_bitrate'
         
     )
-    form = VideoForm
+    form = forms.VideoForm
 
 class CustomTaskResultAdmin(TaskResultAdmin):
     actions = [retry_celery_task_admin_action, ]
@@ -56,10 +59,10 @@ class CustomTaskResultAdmin(TaskResultAdmin):
 admin.site.unregister(TaskResult)
 admin.site.register(TaskResult, CustomTaskResultAdmin)
 
-admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(LanguageModel, LanguageAdmin)
-admin.site.register(CategoryModel)
-admin.site.register(GenreModel)
-admin.site.register(VideoModel, VideoAdmin)
-admin.site.register(TvChannelModel)
-admin.site.register(ContactUsModel)
+admin.site.register(models.CustomUser, CustomUserAdmin)
+admin.site.register(models.LanguageModel, LanguageAdmin)
+admin.site.register(models.CategoryModel, CategoryAdmin)
+admin.site.register(models.GenreModel, GenreAdmin)
+admin.site.register(models.VideoModel, VideoAdmin)
+admin.site.register(models.TvChannelModel)
+admin.site.register(models.ContactUsModel)

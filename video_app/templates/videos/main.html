@@ -6,13 +6,13 @@
 {% block content %}
 <section class="section colored">
     
-    {% if videos %}
-        {% include "videos/videos_list_page.html" %}
-    {% else %}
-        {% include "error/error.html" %}
-    {% endif %}
+  {% if videos %}
+    {% include "videos/videos_list_page.html" %}
+  {% else %}
+    {% include "error/error.html" %}
+  {% endif %}
 
-        
+ 
 <button class="float" data-toggle="modal" data-target="#videoSearchModel">
     <i class="fa fa-search my-float"></i>
 </button>

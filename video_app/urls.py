@@ -18,9 +18,14 @@ urlpatterns = [
         name='video-list-view'
     ),
     path(
-        'video/<slug:video_title>',
+        'video/watch/<slug:video_title>',
         views.VideoDetailViiew.as_view(), 
         name='video-detail-view'
+    ),
+    path(
+        'video/<slug:video_category>/',
+        views.VideoCaterogry.as_view(), 
+        name='video-category-view'
     ),
     path(
         'tv', 
