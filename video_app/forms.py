@@ -54,3 +54,13 @@ class ContactUsForm(forms.ModelForm):
     class Meta: 
         model = models.ContactUsModel
         fields = '__all__'
+
+class CategoryForm(forms.ModelForm):
+    class Meta: 
+        model = models.CategoryModel
+        fields = '__all__'
+
+class GenreForm(forms.ModelForm):
+    class Meta: 
+        model = models.GenreModel
+        fields = '__all__'

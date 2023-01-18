@@ -15,3 +15,7 @@ capture_output = True
 
 # How verbose the Gunicorn error logs should be 
 loglevel = "debug"
+
+# SSL - cert
+certfile = './certificate/localhost+2.pem'
+keyfile = './certificate/localhost+2-key.pem'

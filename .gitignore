@@ -2,6 +2,7 @@
 *.env
 *.log 
 *.rdb
+*.pem
 
 # Ignore folders
 __pycache__
@@ -9,6 +10,9 @@ venv/
 media/
 data_backup/
 staticfiles/
+static/ 
 
+# Not ignore sub static folders of django app
+!*/static
 
 processed/*.mp4
