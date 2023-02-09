@@ -81,7 +81,8 @@ class VideoDetailViiew(View):
         video = None
         try:
             video = VideoModel.filter_cache(
-                title_slug = kwargs['video_title']
+                title_slug = kwargs['video_title'],
+                processing_status= Status.FINISHED
             ).first()
             
         except :

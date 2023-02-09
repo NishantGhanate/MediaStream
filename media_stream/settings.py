@@ -167,6 +167,23 @@ CACHES = {
     }
 }
 
+# REST configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'EXCEPTION_HANDLER': 'media_stream.utils.exception_handler.custom_exception_handler',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'DEFAULT_VERSION': 'v1',
+    'ALLOWED_VERSIONS': ['v1', 'v2'],
+    'VERSION_PARAM': 'version',
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS' : 'media_stream.utils.custom_pagination.CustomPagination'
+}
+
 # App logging
 LOGGING = {
     'version': 1,
@@ -183,11 +200,11 @@ LOGGING = {
         }
     },
     'formatters': {
-        'django.server': {
-            '()': 'django.utils.log.ServerFormatter',
-            'format': '[{server_time}] {message}',
-            'style': '{',
-        },
+        # 'django.server': {
+        #     '()': 'django.utils.log.ServerFormatter',
+        #     'format': '[{server_time}] {message}',
+        #     'style': '{',
+        # },
         'ip_request': {
             'format': (u'%(asctime)s [%(levelname)-5s] - %(ip)s  %(message)s'),
             'datefmt': '%Y-%m-%d %H:%M:%S',
@@ -207,14 +224,14 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         },
-        'django.server': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': './logs/django.log',
-            'formatter': 'ip_request',
-            'maxBytes': 1024*1024*5,
-            "backupCount": 3
-        },
+        # 'django.server': {
+        #     'level': 'INFO',
+        #     'class': 'logging.handlers.RotatingFileHandler',
+        #     'filename': './logs/django.log',
+        #     'formatter': 'ip_request',
+        #     'maxBytes': 1024*1024*5,
+        #     "backupCount": 3
+        # },
         'video_app.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -237,12 +254,12 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django.server': {
-            'handlers': ['console','django.server'],
-            'level': 'INFO',
-            'propagate': False,
-            'filters': ['add_ip_address']
-        },
+        # 'django.server': {
+        #     'handlers': ['console','django.server'],
+        #     'level': 'INFO',
+        #     'propagate': False,
+        #     'filters': ['add_ip_address']
+        # },
         'video_app': {
             'handlers': ['console', 'video_app.file'],
             'level': 'INFO',

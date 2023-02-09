@@ -23,7 +23,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
     path('', include('video_app.urls')),
+    path('api/v1/', include((
+        'video_app.api_views.urls', 'video_app_api'),
+        namespace='v1'
+    ))
 ] 
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
