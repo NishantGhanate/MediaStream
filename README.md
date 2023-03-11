@@ -251,7 +251,7 @@ WantedBy=multi-user.target
 > sudo nano /etc/nginx/conf.d/media_stream.conf
 
 ```
-copy contentsfrom project/ngix/media_stream
+copy contents from project/ngix/media_stream
 ```
 
 6. Copy to site-enabled
