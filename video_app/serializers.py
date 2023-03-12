@@ -30,14 +30,20 @@ class VideoSerializer(serializers.ModelSerializer):
     language = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     genre = GenereSerializer(read_only=True, many=True)
+    m3u8_file_path = serializers.SerializerMethodField()
 
     class Meta:
         model = models.VideoModel
-        exclude = ('processing_status', 'processing_completed', )
-        # fields = '__all__'
+        exclude = (
+            'processing_status', 'processing_completed', 'video_file_path',
+            'uploaded_date', 
+        )
         depth = 1
         
-    
+    def get_m3u8_file_path(self, obj):
+        host = self.context.get("request").build_absolute_uri('/media')
+        return f"{host}{obj.m3u8_file_path}"
+
     def get_language(self, obj):
         return {
             'name' : obj.language.name,
