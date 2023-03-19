@@ -1,0 +1,12 @@
+__pycache__
+
+*.pyc
+*.dump.sql
+*db
+env/
+venv/
+ven1/
+
+*.log
+.env
+*.sqlite3

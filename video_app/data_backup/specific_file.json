@@ -1,0 +1,18 @@
+[
+    {
+        "model": "video_app.languagemodel",
+        "pk": 1,
+        "fields": {
+            "name": "English",
+            "name_slug": "english"
+        }
+    },
+    {
+        "model": "video_app.languagemodel",
+        "pk": 2,
+        "fields": {
+            "name": "Hindi",
+            "name_slug": "hindi"
+        }
+    }
+]

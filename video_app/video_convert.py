@@ -12,11 +12,13 @@ from ffmpeg_streaming import (
 
 vc_logger = logging.getLogger('video_convert')
 
-_480p  = Representation(Size(854, 480), Bitrate(750 * 1024, 192 * 1024))
+# _480p  = Representation(Size(854, 480), Bitrate(750 * 1024, 192 * 1024))
 _720p  = Representation(Size(1280, 720), Bitrate(2048 * 1024, 320 * 1024))
 _1080p = Representation(Size(1920, 1080), Bitrate(4096 * 1024, 320 * 1024))
 _2k    = Representation(Size(2560, 1440), Bitrate(6144 * 1024, 320 * 1024))
 _4k    = Representation(Size(3840, 2160), Bitrate(17408 * 1024, 320 * 1024))
+
+RESOLUTIONS = (_720p, _1080p)
 
 def monitor(ffmpeg, duration, time_, time_left, process):
     """
@@ -120,7 +122,7 @@ def mp4_hls(file_path):
         m3u8_path = os.path.join(file_name[0], m3u8_name)
         video = ffmpeg_streaming.input(file_path)
         hls = video.hls(Formats.h264())
-        hls.representations(_480p, _720p, _1080p)
+        hls.representations(RESOLUTIONS)
         hls.output(m3u8_path, monitor= monitor)
         
         # since we are storing in project/media on win it will be projects\\media

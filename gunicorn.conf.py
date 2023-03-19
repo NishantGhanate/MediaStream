@@ -17,5 +17,5 @@ capture_output = True
 loglevel = "debug"
 
 # SSL - cert
-certfile = './certificate/localhost+2.pem'
-keyfile = './certificate/localhost+2-key.pem'
+# certfile = './certificate/localhost+2.pem'
+# keyfile = './certificate/localhost+2-key.pem'
