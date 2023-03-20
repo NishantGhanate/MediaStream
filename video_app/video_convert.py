@@ -122,7 +122,7 @@ def mp4_hls(file_path):
         m3u8_path = os.path.join(file_name[0], m3u8_name)
         video = ffmpeg_streaming.input(file_path)
         hls = video.hls(Formats.h264())
-        hls.representations(RESOLUTIONS)
+        hls.representations(_720p, _1080p)
         hls.output(m3u8_path, monitor= monitor)
         
         # since we are storing in project/media on win it will be projects\\media

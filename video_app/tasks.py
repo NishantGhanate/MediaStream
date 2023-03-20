@@ -84,6 +84,7 @@ def convert_task(id, file_path):
             processing_status = Status.FAILED
         )
         raise VideoProcessFailed(
+            file_name= file_path,
             message= result['error']
         )
 

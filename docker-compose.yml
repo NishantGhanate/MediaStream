@@ -24,7 +24,7 @@ services:
   web:
     build: .
     image: web:latest
-    command: sh -c "./django-entrypoint.sh"
+    command: sh -c "./scripts/django-entrypoint.sh"
     volumes:
       - .:/app # sync with docker with local folders 
     ports:

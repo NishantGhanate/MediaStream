@@ -41,6 +41,13 @@ get_random_secret_key()
 - python manage.py runserver 0.0.0.0:8000
 ```
 
+### 5.1 Dump / load json data
+```
+- python manage.py dumpdata video_app > ./video_app/data_backup/video_app_data.json
+
+- python manage.py loaddata ./video_app/data_backup/video_app_data.json
+
+```
 <hr>
 
 ## 6. Celery Setup

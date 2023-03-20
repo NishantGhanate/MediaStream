@@ -1,0 +1,1 @@
+exec celery  --app media_stream  flower --broker=redis://localhost:6379/1 --port=5566

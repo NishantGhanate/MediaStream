@@ -1,0 +1,201 @@
+[
+    {
+        "model": "video_app.customuser",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$320000$8ZXhKvNPVsi8BIobFM6hxr$/7WC+JUuInY37xihM9/DFxEXRw1hbakHTPnQZGNNsvg=",
+            "last_login": "2023-03-20T16:26:42.917Z",
+            "is_superuser": true,
+            "email": "root@root.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2023-03-20T16:26:12.014Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "video_app.languagemodel",
+        "pk": 1,
+        "fields": {
+            "name": "English",
+            "name_slug": "english"
+        }
+    },
+    {
+        "model": "video_app.languagemodel",
+        "pk": 2,
+        "fields": {
+            "name": "Hindi",
+            "name_slug": "hindi"
+        }
+    },
+    {
+        "model": "video_app.languagemodel",
+        "pk": 3,
+        "fields": {
+            "name": "Telugu",
+            "name_slug": "telugu"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 1,
+        "fields": {
+            "name": "Action",
+            "name_slug": "action"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 2,
+        "fields": {
+            "name": "Horror",
+            "name_slug": "horror"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 3,
+        "fields": {
+            "name": "Drama",
+            "name_slug": "drama"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 4,
+        "fields": {
+            "name": "Thriller",
+            "name_slug": "thriller"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 5,
+        "fields": {
+            "name": "Science Fiction",
+            "name_slug": "science-fiction"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 6,
+        "fields": {
+            "name": "Drama",
+            "name_slug": "drama"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 7,
+        "fields": {
+            "name": "Romance",
+            "name_slug": "romance"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 8,
+        "fields": {
+            "name": "Comedy",
+            "name_slug": "comedy"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 9,
+        "fields": {
+            "name": "Western",
+            "name_slug": "western"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 10,
+        "fields": {
+            "name": "Adventure",
+            "name_slug": "adventure"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 11,
+        "fields": {
+            "name": "Crime",
+            "name_slug": "crime"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 12,
+        "fields": {
+            "name": "Fantasy",
+            "name_slug": "fantasy"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 13,
+        "fields": {
+            "name": "Documentry",
+            "name_slug": "documentry"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 14,
+        "fields": {
+            "name": "Narrative",
+            "name_slug": "narrative"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 15,
+        "fields": {
+            "name": "Animation",
+            "name_slug": "animation"
+        }
+    },
+    {
+        "model": "video_app.genremodel",
+        "pk": 16,
+        "fields": {
+            "name": "Biography",
+            "name_slug": "biography"
+        }
+    },
+    {
+        "model": "video_app.categorymodel",
+        "pk": 1,
+        "fields": {
+            "name": "Movie",
+            "name_slug": "movie"
+        }
+    },
+    {
+        "model": "video_app.categorymodel",
+        "pk": 2,
+        "fields": {
+            "name": "Live Tv",
+            "name_slug": "live-tv"
+        }
+    },
+    {
+        "model": "video_app.categorymodel",
+        "pk": 3,
+        "fields": {
+            "name": "Documentry",
+            "name_slug": "documentry"
+        }
+    },
+    {
+        "model": "video_app.categorymodel",
+        "pk": 4,
+        "fields": {
+            "name": "Music Video",
+            "name_slug": "music-video"
+        }
+    }
+]
