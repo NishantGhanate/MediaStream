@@ -27,7 +27,9 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+# ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+
+ALLOWED_HOSTS = ['*']
 
 GOOGLE_FORM_URL = config('GOOGLE_FORM_URL')
 
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
+    'corsheaders',
     'captcha',
     'video_app'
 ]
@@ -48,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -55,6 +59,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+
+    
 ROOT_URLCONF = 'media_stream.urls'
 
 TEMPLATES = [
@@ -68,7 +75,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media'
+                'django.template.context_processors.media',
+                'video_app.context_processors.get_google_form',
             ],
         },
     },
@@ -84,11 +92,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'CONN_MAX_AGE': 500,
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'NAME': config('POSTGRES_DB'),
+        'HOST': config('POSTGRES_HOST'),
+        'PORT': config('POSTGRES_PORT'),
     }
 }
 
@@ -167,6 +175,23 @@ CACHES = {
     }
 }
 
+# REST configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'EXCEPTION_HANDLER': 'media_stream.utils.exception_handler.custom_exception_handler',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'DEFAULT_VERSION': 'v1',
+    'ALLOWED_VERSIONS': ['v1', 'v2'],
+    'VERSION_PARAM': 'version',
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS' : 'media_stream.utils.custom_pagination.CustomPagination'
+}
+
 # App logging
 LOGGING = {
     'version': 1,
@@ -183,11 +208,11 @@ LOGGING = {
         }
     },
     'formatters': {
-        'django.server': {
-            '()': 'django.utils.log.ServerFormatter',
-            'format': '[{server_time}] {message}',
-            'style': '{',
-        },
+        # 'django.server': {
+        #     '()': 'django.utils.log.ServerFormatter',
+        #     'format': '[{server_time}] {message}',
+        #     'style': '{',
+        # },
         'ip_request': {
             'format': (u'%(asctime)s [%(levelname)-5s] - %(ip)s  %(message)s'),
             'datefmt': '%Y-%m-%d %H:%M:%S',
@@ -207,14 +232,14 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         },
-        'django.server': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': './logs/django.log',
-            'formatter': 'ip_request',
-            'maxBytes': 1024*1024*5,
-            "backupCount": 3
-        },
+        # 'django.server': {
+        #     'level': 'INFO',
+        #     'class': 'logging.handlers.RotatingFileHandler',
+        #     'filename': './logs/django.log',
+        #     'formatter': 'ip_request',
+        #     'maxBytes': 1024*1024*5,
+        #     "backupCount": 3
+        # },
         'video_app.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -237,12 +262,12 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django.server': {
-            'handlers': ['console','django.server'],
-            'level': 'INFO',
-            'propagate': False,
-            'filters': ['add_ip_address']
-        },
+        # 'django.server': {
+        #     'handlers': ['console','django.server'],
+        #     'level': 'INFO',
+        #     'propagate': False,
+        #     'filters': ['add_ip_address']
+        # },
         'video_app': {
             'handlers': ['console', 'video_app.file'],
             'level': 'INFO',

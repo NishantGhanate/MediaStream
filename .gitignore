@@ -1,18 +1,23 @@
-*.pyc
-*.env
-*.log 
-*.rdb
-*.pem
-
-# Ignore folders
-__pycache__
-venv/
 media/
-data_backup/
-staticfiles/
-static/ 
 
-# Not ignore sub static folders of django app
-!*/static
+__pycache__
 
-processed/*.mp4
+*.pyc
+*.dump.sql
+*db
+env/
+venv/
+ven1/
+*.log
+*.env
+.env.dev
+.env.prod
+*.sqlite3
+
+localhost+2-key.pem
+localhost+2.pem
+
+/static
+
+processed/*
+!processed/_brief.txt

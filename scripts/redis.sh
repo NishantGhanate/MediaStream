@@ -1,0 +1,1 @@
+exec sudo service redis-server start
