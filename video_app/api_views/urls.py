@@ -10,7 +10,7 @@ from .video_caterogry_api import VideoCategoryApi
 urlpatterns = [
     path('tea-apot-api', 
         TeaPotApi.as_view(),
-        name='teapot-api-view'
+        name='teapot-api-api'
     ),
     path(
         'tv', 

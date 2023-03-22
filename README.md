@@ -65,3 +65,10 @@ TIME_ZONE = Asia/Kolkata
 docker-compose config
 docker-compose up
 docker-compose up --force-recreate
+
+### 6. Load Demo data from exc it
+```
+> python3.9 manage.py loaddata ./video_app/data_backup/video_app_data.json
+
+> python3.9 createsuperuser 
+````

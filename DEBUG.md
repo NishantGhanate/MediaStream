@@ -71,6 +71,7 @@ Open another wsl terminal
 - sudo service redis-server start
 - redis-cli 
 - PING
+- redis-cli MONITOR
 
 EXtra : Redis GUI 
 
