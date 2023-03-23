@@ -40,6 +40,7 @@ class VideoSerializer(serializers.ModelSerializer):
         )
         depth = 1
         
+        
     def get_m3u8_file_path(self, obj):
         host = self.context.get("request").build_absolute_uri('/media')
         return f"{host}{obj.m3u8_file_path}"
