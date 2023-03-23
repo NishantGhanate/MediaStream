@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ['*']
 
 GOOGLE_FORM_URL = config('GOOGLE_FORM_URL')
 
+WHATS_APP_LINK = config('WHATS_APP_LINK')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -77,6 +79,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
                 'video_app.context_processors.get_google_form',
+                'video_app.context_processors.get_whatsapp_link',
             ],
         },
     },
