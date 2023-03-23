@@ -37,6 +37,8 @@ services:
 
   nginx:
     build: ./nginx
+    volumes:
+      - .:/app # sync with docker with local folders 
     ports:
       - "80:80"
     depends_on:
