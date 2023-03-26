@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
+    'rest_framework',
+    'rest_framework_swagger',
     'django_filters',
     'corsheaders',
     'captcha',
@@ -82,6 +84,9 @@ TEMPLATES = [
                 'video_app.context_processors.get_google_form',
                 'video_app.context_processors.get_whatsapp_link',
             ],
+            'libraries': {
+                'staticfiles': 'django.templatetags.static',
+            },
         },
     },
 ]
@@ -181,6 +186,7 @@ CACHES = {
 
 # REST configuration
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS' : 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
