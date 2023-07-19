@@ -28,13 +28,14 @@ urlpatterns = [
         name='video-list-api'
     ),
     path(
+        'video/<slug:category__name_slug>',
+        VideoCategoryApi.as_view(), 
+        name='video-category-api'
+    ),
+    path(
         'video/watch/<slug:video_title>',
         VideoDetailApi.as_view(), 
         name='video-detail-api'
     ),
-    path(
-        'video/<slug:video_category>/',
-        VideoCategoryApi.as_view(), 
-        name='video-category-api'
-    )
+    
 ]

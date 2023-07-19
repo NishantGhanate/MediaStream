@@ -13,7 +13,7 @@ from media_stream.utils import custom_exceptions as ce
 from media_stream.utils.custom_pagination import CustomPagination
 from media_stream.utils.standard_response import get_response_structure
 
-from ..models import VideoModel, Status
+from ..models import VideoModel, VideoProcessingStatus
 from ..serializers import VideoSerializer
 
 logger = logging.getLogger('video_app')
@@ -33,7 +33,7 @@ class VideoDetailApi(APIView):
             if request.version == 'v1':
                 video = VideoModel.filter_cache(
                     title_slug = kwargs['video_title'],
-                    processing_status= Status.FINISHED
+                    processing_status= VideoProcessingStatus.FINISHED
                 ).first()
                     
                 if video is None:

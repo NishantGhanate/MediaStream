@@ -10,7 +10,7 @@ from celery import shared_task
 from django.core.cache import cache
 
 from video_app.video_convert import mp4_hls
-from video_app.models import Status, VideoModel
+from video_app.models import VideoProcessingStatus, VideoModel
 from media_stream.utils.custom_exceptions import VideoProcessFailed
 
 from django.conf import settings
@@ -81,7 +81,7 @@ def convert_task(id, file_path):
     
     if 'error' in result:
         VideoModel.objects.filter(pk=id).update(
-            processing_status = Status.FAILED
+            processing_status = VideoProcessingStatus.FAILED
         )
         raise VideoProcessFailed(
             file_name= file_path,
@@ -89,7 +89,7 @@ def convert_task(id, file_path):
         )
 
     VideoModel.objects.filter(pk=id).update(
-        processing_status = Status.FINISHED,
+        processing_status = VideoProcessingStatus.FINISHED,
         processing_completed = time_took,
         **result
     )

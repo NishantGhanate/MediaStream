@@ -7,7 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.db.models import Q
 
 from video_app.forms import ContactUsForm
-from video_app.models import Status, VideoModel, TvChannelModel
+from video_app.models import VideoProcessingStatus, VideoModel, TvChannelModel
 
 
 va_logger = logging.getLogger('video_app')
@@ -53,10 +53,10 @@ class VideoListView(View):
         if search_title:
             videos = VideoModel.filter_cache(
                 title__icontains= search_title,
-                processing_status= Status.FINISHED
+                processing_status= VideoProcessingStatus.FINISHED
             )
         else:
-            videos = VideoModel.filter_cache(processing_status= Status.FINISHED)
+            videos = VideoModel.filter_cache(processing_status= VideoProcessingStatus.FINISHED)
         
         paginator = Paginator(videos, VideoListView.page_size)
         page = request.GET.get('page', 1)
@@ -82,7 +82,7 @@ class VideoDetailViiew(View):
         try:
             video = VideoModel.filter_cache(
                 title_slug = kwargs['video_title'],
-                processing_status= Status.FINISHED
+                processing_status= VideoProcessingStatus.FINISHED
             ).first()
             
         except :
@@ -108,13 +108,13 @@ class VideoCaterogry(View):
             videos = VideoModel.filter_cache(
                 title__icontains= search_title,
                 category__name_slug = kwargs['video_category'],
-                processing_status= Status.FINISHED
+                processing_status= VideoProcessingStatus.FINISHED
             )
         else:
 
             videos = VideoModel.filter_cache(
                 category__name_slug = kwargs['video_category'],
-                processing_status= Status.FINISHED
+                processing_status= VideoProcessingStatus.FINISHED
             )
         
         paginator = Paginator(videos, VideoListView.page_size)

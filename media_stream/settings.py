@@ -31,9 +31,9 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
-GOOGLE_FORM_URL = config('GOOGLE_FORM_URL')
+GOOGLE_FORM_URL = config('GOOGLE_FORM_URL', default='')
 
-WHATS_APP_LINK = config('WHATS_APP_LINK')
+WHATS_APP_LINK = config('WHATS_APP_LINK', default='')
 
 # Application definition
 
@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
+    'rest_framework',
+    'rest_framework_swagger',
+    'django_filters',
     'corsheaders',
     'captcha',
     'video_app'
@@ -81,6 +84,9 @@ TEMPLATES = [
                 'video_app.context_processors.get_google_form',
                 'video_app.context_processors.get_whatsapp_link',
             ],
+            'libraries': {
+                'staticfiles': 'django.templatetags.static',
+            },
         },
     },
 ]
@@ -180,6 +186,7 @@ CACHES = {
 
 # REST configuration
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS' : 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
@@ -191,8 +198,12 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_PAGINATION_CLASS' : 'media_stream.utils.custom_pagination.CustomPagination'
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.SearchFilter',
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ),
+    'DEFAULT_PAGINATION_CLASS' : 'media_stream.utils.custom_pagination.CustomPagination',
+    'PAGE_SIZE': 20
 }
 
 # App logging

@@ -103,7 +103,7 @@ class CategoryModel(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-class Status(models.IntegerChoices):
+class VideoProcessingStatus(models.IntegerChoices):
     FAILED = -1
     QUEUED = 0
     STARTED = 1
@@ -125,7 +125,7 @@ class VideoModel(models.Model, ModelCacheMixin):
     category = models.ForeignKey(CategoryModel, on_delete=models.SET_NULL, null=True)
     released_date = models.DateField(null= True, blank=True)
     uploaded_date = models.DateTimeField(auto_now_add=True, editable=False)
-    processing_status = models.IntegerField(choices=Status.choices, default= Status.QUEUED)
+    processing_status = models.IntegerField(choices=VideoProcessingStatus.choices, default= VideoProcessingStatus.QUEUED)
     processing_completed = models.DurationField(null= True, blank=True)
     duration = models.DurationField(null= True, blank=True)
     file_size = models.CharField(max_length=15, null= True, blank= True)
@@ -143,7 +143,7 @@ class VideoModel(models.Model, ModelCacheMixin):
     def save(self, *args, **kwargs):
         if not self.id:
             self.title_slug = slugify(self.title)
-            self.processing_status = Status.STARTED
+            self.processing_status = VideoProcessingStatus.STARTED
         super(VideoModel, self).save(*args, **kwargs)
     
     def __str__(self):

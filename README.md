@@ -3,7 +3,7 @@
 A django web application to stream video content using .m3u8 
 
 
-### System Requirements
+### System Requirements used for development
 ```
 - Python 3.9
 - Postgres Sql 14
@@ -18,13 +18,17 @@ A django web application to stream video content using .m3u8
 - cd MediaStream
 ```
 
-### 3. Generate Django secret key :
+### 3. Generate secret key :
 ```python
-from django.core.management.utils import get_random_secret_key
+If you already have django on your system
 
-get_random_secret_key()
+C:\Users\nishant>python
+>> from django.core.management.utils import get_random_secret_key
+>> SECRET_KEY = get_random_secret_key()
 
-'[SECRET KEY]'
+OR 
+
+SECRET_KEY = <ANY_50_CHARACTER_RANDOM_STRING>
 ```
 
 ### 4. Create .env file in project root
@@ -32,7 +36,7 @@ get_random_secret_key()
 
 # Settings
 DEBUG= False
-SECRET_KEY= sauce
+SECRET_KEY= SECRET_KEY
 ALLOWED_HOSTS= localhost 127.0.0.1 web [::1]
 
 # Postgres Database
@@ -62,13 +66,17 @@ TIME_ZONE = Asia/Kolkata
 ```
 
 ### 5. Docker 
-docker-compose config
-docker-compose up
-docker-compose up --force-recreate
-
-### 6. Load Demo data from exc it
 ```
-> python3.9 manage.py loaddata ./video_app/data_backup/video_app_data.json
+> docker-compose config
 
+> docker-compose up
+```
+
+### 6. Open Docker and go to django image terminal
+```
+- Create admin user :
 > python3.9 createsuperuser 
-````
+
+- Load Fixture Data :
+> python3.9 manage.py loaddata ./video_app/data_backup/video_app_data.json
+```

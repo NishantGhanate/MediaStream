@@ -1,17 +1,15 @@
-from glob import escape
 import logging
 import traceback
 
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework.permissions import AllowAny
+from rest_framework.filters import OrderingFilter
 from rest_framework.versioning import NamespaceVersioning
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 
-from media_stream.common import message
 from media_stream.utils import custom_exceptions as ce 
 from media_stream.utils.custom_pagination import CustomPagination
-from media_stream.utils.standard_response import get_response_structure
 
 from ..models import TvChannelModel
 from ..serializers import TvSerializer
@@ -23,32 +21,24 @@ class VersioningConfig(NamespaceVersioning):
     allowed_versions = ['v1']
     version_param = 'version'
 
-class TvListApi(APIView):
+class TvListApi(generics.ListAPIView):
     permission_classes = (AllowAny,)
     versioning_class = VersioningConfig
-    page_size = 12
-
-    def get(self, request):
+    serializer_class = TvSerializer
+    pagination_class = CustomPagination
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filterset_fields = (
+        'channel_name_slug', 'language__name_slug', 
+        'category__name_slug'
+    )
+    search_fields = ('channel_name', )
+    ordering = ('-id', )
+    queryset = TvChannelModel.cache_all()
+    
+    def get(self, request, *args, **kwargs):
         try :
             if request.version == 'v1':
-                search_channel= request.GET.get("search-channel")
-                if search_channel:
-                    channels = TvChannelModel.filter_cache(
-                        channel_name__icontains= search_channel
-                    )
-                else:
-                    channels = TvChannelModel.cache_all()
-                
-                paginator = CustomPagination()
-                paginator.page_size = TvListApi.page_size
-                result_page = paginator.paginate_queryset(
-                    channels, request
-                )
-                serializer = TvSerializer(
-                    result_page, many=True, context={'request': request}
-                )
-                return paginator.get_paginated_response(serializer.data)
-
+                return self.list(request, *args, **kwargs)
         except :
             logger.error(traceback.format_exc())
             raise ce.InternalServerError
