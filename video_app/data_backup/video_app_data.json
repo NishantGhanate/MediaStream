@@ -1,20 +1,5 @@
 [
     {
-        "model": "video_app.customuser",
-        "pk": 1,
-        "fields": {
-            "password": "pbkdf2_sha256$320000$8ZXhKvNPVsi8BIobFM6hxr$/7WC+JUuInY37xihM9/DFxEXRw1hbakHTPnQZGNNsvg=",
-            "last_login": "2023-03-20T16:26:42.917Z",
-            "is_superuser": true,
-            "email": "root@root.com",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2023-03-20T16:26:12.014Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    },
-    {
         "model": "video_app.languagemodel",
         "pk": 1,
         "fields": {
