@@ -11,7 +11,6 @@ def duration(timedelta):
     """
     total_seconds = int(timedelta.total_seconds())
     time_duration = datetime.timedelta(seconds= total_seconds)
-
     return f"{time_duration}"
     
 @register.filter
@@ -21,12 +20,10 @@ def quality(dimension):
     :rtype: str
     """
     height = dimension.split('x')[1]
-
     return f"{height}p"
 
 @register.filter
 def genre(genre_qs):
     name = genre_qs.all()
-
     return f"{name[0]}"
 

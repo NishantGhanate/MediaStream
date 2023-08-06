@@ -73,7 +73,7 @@ GOOGLE_FORM_URL = <form_url>
 WHATS_APP_LINK = <whats_app_url>
 ```
 ## prod.env :
-```json
+```python
 # PRODUCTION
 
 # Settings 
@@ -123,7 +123,8 @@ TIME_ZONE = Asia/Kolkata
 > docker-compose config
 
 # build docker image.
-venv > python docker.py
+> python3.9 -m pip install python-decouple
+> python docker.py
 
 # rebuild image
 > docker-compose up --build 
@@ -138,4 +139,4 @@ venv > python docker.py
 > python3.9 manage.py loaddata ./video_app/data_backup/video_app_data.json
 ```
 
-### 7. To Run locally refer DEBUG.md
+### 7. To run locally refer DEBUG.md

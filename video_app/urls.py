@@ -13,6 +13,16 @@ urlpatterns = [
         name='contact-us'
     ),
     path(
+        'tv', 
+        views.TvListView.as_view(),
+        name='tv-list-view'
+    ),
+    path(
+        'tv/<slug:channel_name_slug>', 
+        views.TvDetailView.as_view(),
+        name='tv-detail-view'
+    ),
+     path(
         'video', 
         views.VideoListView.as_view(),
         name='video-list-view'
@@ -27,14 +37,4 @@ urlpatterns = [
         views.VideoCaterogry.as_view(), 
         name='video-category-view'
     ),
-    path(
-        'tv', 
-        views.TvListView.as_view(),
-        name='tv-list-view'
-    ),
-    path(
-        'tv/<slug:channel_name_slug>', 
-        views.TvDetailView.as_view(),
-        name='tv-detail-view'
-    )
 ]

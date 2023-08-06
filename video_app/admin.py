@@ -34,13 +34,15 @@ class LanguageAdmin(admin.ModelAdmin):
     readonly_fields = ('name_slug',)
     form = forms.LanguageForm
 
+
+class GenreAdmin(admin.ModelAdmin):
+    readonly_fields = ('name_slug',)
+    form = forms.GenreForm
+
 class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = ('name_slug',)
     form = forms.CategoryForm
 
-class GenreAdmin(admin.ModelAdmin):
-    readonly_fields = ('name_slug',)
-    form = forms.CategoryForm
 
 class VideoAdmin(admin.ModelAdmin):
     readonly_fields = (
@@ -60,9 +62,9 @@ admin.site.unregister(TaskResult)
 admin.site.register(TaskResult, CustomTaskResultAdmin)
 
 admin.site.register(models.CustomUser, CustomUserAdmin)
-admin.site.register(models.LanguageModel, LanguageAdmin)
-admin.site.register(models.CategoryModel, CategoryAdmin)
-admin.site.register(models.GenreModel, GenreAdmin)
-admin.site.register(models.VideoModel, VideoAdmin)
-admin.site.register(models.TvChannelModel)
 admin.site.register(models.ContactUsModel)
+admin.site.register(models.LanguageModel, LanguageAdmin)
+admin.site.register(models.GenreModel, GenreAdmin)
+admin.site.register(models.CategoryModel, CategoryAdmin)
+admin.site.register(models.TvChannelModel)
+admin.site.register(models.VideoModel, VideoAdmin)
