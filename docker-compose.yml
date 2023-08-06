@@ -6,8 +6,6 @@ services:
     ports:
       - "5436:5436"
     command: -p 5436
-    env_file:
-      - ./.env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -24,13 +22,11 @@ services:
   web:
     build: .
     image: web:latest
-    command: sh -c "./scripts/django-entrypoint.sh"
+    command: sh -c "./scripts/django.sh"
     volumes:
       - .:/app # sync with docker with local folders 
     ports:
       - "8000:8000"
-    env_file: 
-      - ./.env
     depends_on:
       - database
       - redis
@@ -50,11 +46,9 @@ services:
     container_name: celery
     volumes:
       - .:/app
-    env_file:
-      - ./.env
     command: celery -A media_stream worker -l INFO -Q celery,high --pool=solo
     depends_on:
-      - redis
+      - web
   
 
   # # http://localhost:5050/
@@ -62,8 +56,6 @@ services:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
     restart: always
-    env_file:
-      - ./.env
     environment:
        PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
        PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}

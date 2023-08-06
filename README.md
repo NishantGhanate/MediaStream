@@ -7,7 +7,7 @@ A django web application to stream video content using .m3u8
 ```
 - Python 3.9
 - Postgres Sql 14
-- Ubuntu 20.04 WSL 1 on Windows 11
+- Ubuntu 20.04 WSL 2 on Windows 11
 ```
 
 
@@ -31,9 +31,15 @@ OR
 SECRET_KEY = <ANY_50_CHARACTER_RANDOM_STRING>
 ```
 
-### 4 Create .env file in project root
+### 4 Create .env, dev.env, prod.env file in project root
 
-## Dev :
+### .env
+```python
+DEBUG = True
+```
+
+
+## dev.env
 ```python
 
 # Settings - DEVELOPMENT
@@ -66,7 +72,7 @@ GOOGLE_FORM_URL = <form_url>
 
 WHATS_APP_LINK = <whats_app_url>
 ```
-## Prod :
+## prod.env :
 ```json
 # PRODUCTION
 
@@ -117,7 +123,7 @@ TIME_ZONE = Asia/Kolkata
 > docker-compose config
 
 # build docker image.
-> docker-compose up
+venv > python docker.py
 
 # rebuild image
 > docker-compose up --build 
@@ -132,14 +138,4 @@ TIME_ZONE = Asia/Kolkata
 > python3.9 manage.py loaddata ./video_app/data_backup/video_app_data.json
 ```
 
-### 7. Running locally
-
-```
-> start wsl
-
-> sudo service redis-server start
-
-> start your postgres db
-
-> python manage.py runserver
-```
+### 7. To Run locally refer DEBUG.md
