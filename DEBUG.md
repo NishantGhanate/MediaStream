@@ -78,6 +78,7 @@ EXtra : Redis GUI
 - Redis on wsl 2
 - redisInsight-v2 [https://redis.com/redis-enterprise/redis-insight/#insight-form]
 
+- install redis on wsl : https://anggo.ro/note/installing-redis-in-ubuntu-wsl/
 ```
 
 
