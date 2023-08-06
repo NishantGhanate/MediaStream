@@ -13,3 +13,4 @@ echo -e "\e[32m >>> Static files collect completed \e[97m"
 
 echo -e "\e[32m >>> Running server \e[97m"
 gunicorn -c gunicorn.conf.py media_stream.wsgi:application
+# python3.9 manage.py runserver 0.0.0.0:8000

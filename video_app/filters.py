@@ -5,15 +5,15 @@ import logging
 
 logger = logging.getLogger('video_app')
 
-class VideoModelFilter(FilterSet):
+# class VideoModelFilter(FilterSet):
 
     # genre = CharFilter(method = 'get_genre')
     # language = CharFilter(method = 'get_language', field_name='language__slug_name')
     # category = CharFilter(method = 'get_category', field_name='category__slug_name')
 
-    class Meta:
-        model = models.VideoModel
-        fields = ('genre',)
+    # class Meta:
+    #     model = models.VideoModel
+    #     fields = ('genre',)
     
     # def get_genre(self, queryset, field_name, value):
     #     logger.info(queryset, field_name, value)

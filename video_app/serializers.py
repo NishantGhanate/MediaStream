@@ -6,19 +6,21 @@ class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.LanguageModel
         fields = '__all__'
-        
-class TvSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.TvChannelModel
-        fields = '__all__'
 
 class GenereSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.GenreModel
         fields = '__all__'
-    
+
+
+class TvSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.TvChannelModel
+        fields = '__all__'
+
+
     def to_representation(self, obj):
         return  {
             'name' : obj.name,
@@ -56,8 +58,3 @@ class VideoSerializer(serializers.ModelSerializer):
             'name' : obj.category.name,
             'slug' : obj.category.name_slug
         }
-    
-        
-       
-
-        

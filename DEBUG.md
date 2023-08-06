@@ -32,6 +32,21 @@ get_random_secret_key()
 '[SECRET KEY]'
 ```
 
+### Remove cache 
+> find . -path "*/migrations/*.pyc"  -delete
+> find . -name "*.pyc" -exec rm -- {} +
+
+
+### Docker postgres
+
+docker run -d --name=postgres_c -p 5432:5432 -e POSTGRES_PASSWORD=docker postgres
+> docker exec -it postgres_c psql -U postgres
+> docker exec -it postgres_c psql -U postgres -p 5436
+> create database media_stream_local;
+> \l
+> \q
+> drop schema media_stream
+
 
 ### 5. Run server
 ```
@@ -283,6 +298,9 @@ in windows & wsl as well .
 2 Set autocrlf true in gitbash & wsl terminal
 > git config --global core.autocrlf true
 
+3. Incase of already pushed crlf
+sudo apt-get install dos2unix
+find /mnt/d/github/MediaHls -type f -execdos2unix {} +
 ```
 
 ### TEST SMALL VIDEOS

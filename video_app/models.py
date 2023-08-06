@@ -56,6 +56,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+
+class ContactUsModel(models.Model):
+    full_name = models.CharField(max_length= 50)
+    mobile_no = models.CharField(max_length= 15)
+    email = models.EmailField(max_length= 75)
+    message = models.TextField(max_length=500)
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return '{} - {}'.format(self.full_name, self.mobile_no)
+
 class LanguageModel(models.Model):
     name = models.CharField(max_length= 50, null=False, blank=False, unique= True)
     name_slug = models.SlugField(blank=True)
@@ -88,6 +101,7 @@ class GenreModel(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+
 class CategoryModel(models.Model):
     name = models.CharField(max_length= 100)
     name_slug = models.SlugField(blank=True)
@@ -102,6 +116,35 @@ class CategoryModel(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+
+class TvChannelModel(models.Model, ModelCacheMixin):
+    CACHE_KEY = "TvChannel"
+    CACHED_RELATED_OBJECT = ["language", "category"]
+    CACHED_PREFETCH_OBJECT = None
+
+    channel_name = models.CharField(max_length=255, blank= False)
+    channel_name_slug = models.SlugField(blank= True)
+    description = models.TextField(null=True, blank=True)
+    m3u8_url = models.URLField()
+    thumbnail = models.ImageField(upload_to=STORE_TV_THUMBNAIL)
+    language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(CategoryModel, on_delete=models.SET_NULL, null=True)
+    objects = GetOrNoneManager()
+
+    class Meta:
+        ordering = ['-id']
+        unique_together = ['channel_name', 'language']
+        
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.channel_name_slug = slugify(self.channel_name)
+            
+        super(TvChannelModel, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return '{} - {}'.format(self.channel_name, self.language)
+    
 
 class VideoProcessingStatus(models.IntegerChoices):
     FAILED = -1
@@ -148,43 +191,3 @@ class VideoModel(models.Model, ModelCacheMixin):
     
     def __str__(self):
         return '{} - {}'.format(self.title, self.category)
-
-class TvChannelModel(models.Model, ModelCacheMixin):
-    CACHE_KEY = "TvChannel"
-    CACHED_RELATED_OBJECT = ["language", "category"]
-    CACHED_PREFETCH_OBJECT = None
-
-    channel_name = models.CharField(max_length=255, blank= False)
-    channel_name_slug = models.SlugField(blank= True)
-    description = models.TextField(null=True, blank=True)
-    m3u8_url = models.URLField()
-    thumbnail = models.ImageField(upload_to=STORE_TV_THUMBNAIL)
-    language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
-    category = models.ForeignKey(CategoryModel, on_delete=models.SET_NULL, null=True)
-    objects = GetOrNoneManager()
-
-    class Meta:
-        ordering = ['-id']
-        unique_together = ['channel_name', 'language']
-        
-        
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.channel_name_slug = slugify(self.channel_name)
-            
-        super(TvChannelModel, self).save(*args, **kwargs)
-    
-    def __str__(self):
-        return '{} - {}'.format(self.channel_name, self.language)
-
-class ContactUsModel(models.Model):
-    full_name = models.CharField(max_length= 50)
-    mobile_no = models.CharField(max_length= 15)
-    email = models.EmailField(max_length= 75)
-    message = models.TextField(max_length=500)
-
-    class Meta:
-        ordering = ['-id']
-
-    def __str__(self):
-        return '{} - {}'.format(self.full_name, self.mobile_no)

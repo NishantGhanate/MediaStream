@@ -6,13 +6,12 @@ from decouple import config
 DEBUG = config('DEBUG', cast=bool)
 
 def run_docker_compose():
-    # docker compose --env-file prod.env  up 
+    # docker compose --env-file prod.env up 
     command = ["docker", "compose", "--env-file", "", "up"]
     if DEBUG:
         command[3] = "dev.env"
     else:
         command[3] = "prod.env"
-    
     try:
         subprocess.call(command)
     except subprocess.CalledProcessError as cpe:
